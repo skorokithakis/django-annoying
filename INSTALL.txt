@@ -1,0 +1,5 @@
+Installation instruction:
+
+* Copy annoying directory to your django project or put in on PYTHONPATH.
+
+That's it.
