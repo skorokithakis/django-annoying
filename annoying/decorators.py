@@ -12,7 +12,7 @@ def render_to(template=None):
      - template: template name to use
 
     Examples:
-    # 1
+    # 1. Template name in decorator parameters
 
     @render_to('template.html')
     def foo(request):
@@ -26,7 +26,8 @@ def render_to(template=None):
                                   {'bar': bar}, 
                                   context_instance=RequestContext(request))
 
-    # 2
+
+    # 2. Template name as item value in return dictionary
 
     @render_to()
     def foo(request, category):
@@ -50,3 +51,19 @@ def render_to(template=None):
             return render_to_response(tmpl, output, context_instance=RequestContext(request))
         return wrapper
     return renderer
+
+
+
+def signals(signal, sender, **kwargs):
+    """
+    Django signals as decorators
+
+    Usage example:
+        @signals(post_save, sender=Vote)
+        def vote_added(sender, **kwargs):
+            ...
+    """
+    def wrapper(function):
+        signal.connect(function, sender) 
+        return function
+    return wrapper
