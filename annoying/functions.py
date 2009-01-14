@@ -1,4 +1,4 @@
-from django.shortcuts import _get_queryset, get_object_or_404
+from django.shortcuts import _get_queryset
 
 
 def get_object_or_None(klass, *args, **kwargs):

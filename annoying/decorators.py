@@ -1,11 +1,14 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.db.models import signals as signalmodule
 
 
 def render_to(template=None):
     """
-    Decorator for Django views that sends returned dict to render_to_response function
-    with given template from a string or variable and RequestContext as context instance.
+    Decorator for Django views that sends returned dict to render_to_response function.
+
+    Template name can be decorator parameter or TEMPLATE item in returned dictionary.
+    RequestContext always added as context instance.
     If view doesn't return dict then decorator simply returns output.
 
     Parameters:
@@ -27,7 +30,7 @@ def render_to(template=None):
                                   context_instance=RequestContext(request))
 
 
-    # 2. Template name as item value in return dictionary
+    # 2. Template name as TEMPLATE item value in return dictionary
 
     @render_to()
     def foo(request, category):
@@ -54,16 +57,56 @@ def render_to(template=None):
 
 
 
-def signals(signal, sender, **kwargs):
-    """
-    Django signals as decorators
+class Signals(object):
+    '''
+    Convenient wrapper for working with Django's signals (or any other
+    implementation using same API).
 
-    Usage example:
-        @signals(post_save, sender=Vote)
-        def vote_added(sender, **kwargs):
-            ...
-    """
-    def wrapper(function):
-        signal.connect(function, sender) 
-        return function
-    return wrapper
+    Example of usage::
+
+
+       # connect to registered signal
+       @signals.post_save(sender=YourModel)
+       def sighandler(instance, **kwargs):
+           pass
+
+       # connect to any signal
+       signals.register_signal(siginstance, signame) # and then as in example above
+
+       or 
+        
+       @signals(siginstance, sender=YourModel)
+       def sighandler(instance, **kwargs):
+           pass
+
+    In any case defined function will remain as is, without any changes.
+
+    (c) 2008 Alexander Solovyov, new BSD License
+    '''
+    def __init__(self):
+        self._signals = {}
+
+        # register all Django's default signals
+        for k, v in signalmodule.__dict__.iteritems():
+            # that's hardcode, but IMHO it's better than isinstance
+            if not k.startswith('__') and k != 'Signal':
+                self.register_signal(v, k)
+
+    def __getattr__(self, name):
+        return self._connect(self._signals[name])
+
+    def __call__(self, signal, **kwargs):
+        def inner(func):
+            signal.connect(func, **kwargs)
+            return func
+        return inner
+
+    def _connect(self, signal):
+        def wrapper(**kwargs):
+            return self(signal, **kwargs)
+        return wrapper
+
+    def register_signal(self, signal, name):
+        self._signals[name] = signal
+
+signals = Signals()
