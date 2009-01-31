@@ -14,6 +14,14 @@ class AutoSingleRelatedObjectDescriptor(SingleRelatedObjectDescriptor):
 class AutoOneToOneField(OneToOneField):
     '''
     OneToOneField creates related object on first call if it doesnt exists yet.
+    Use it instead of original OneToOne field.
+
+    example:
+        
+        class MyProfile(models.Model):
+            user = AutoOneToOneField(User, primary_key=True)
+            home_page = models.URLField(max_length=255)
+            icq = models.CharField(max_length=255)
     '''
     def contribute_to_related_class(self, cls, related):
         setattr(cls, related.get_accessor_name(), AutoSingleRelatedObjectDescriptor(related))

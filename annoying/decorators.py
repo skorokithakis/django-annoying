@@ -1,6 +1,10 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.db.models import signals as signalmodule
+from django.http import HttpResponse
+from django.utils import simplejson
+
+__all__ = ['render_to', 'signals', 'ajax_request']
 
 
 def render_to(template=None):
@@ -110,3 +114,35 @@ class Signals(object):
         self._signals[name] = signal
 
 signals = Signals()
+
+
+
+class JsonResponse(HttpResponse):
+    """
+    HttpResponse descendant, which return response with ``application/json`` mimetype.
+    """
+    def __init__(self, data):
+        super(JsonResponse, self).__init__(content=simplejson.dumps(data), mimetype='application/json')
+
+
+
+def ajax_request(func):
+    """
+    If view returned serializable dict, returns JsonResponse with this dict as content.
+
+    example:
+        
+        @ajax_request
+        def my_view(request):
+            news = News.objects.all()
+            news_titles = [entry.title for entry in news]
+            return {'news_titles': news_titles}
+    """
+    def wrapper(request, *args, **kwargs):
+        response = func(request, *args, **kwargs)
+        if isinstance(response, dict):
+            return JsonResponse(response)
+        else:
+            return response
+    return wrapper
+
