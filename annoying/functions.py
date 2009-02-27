@@ -1,4 +1,5 @@
 from django.shortcuts import _get_queryset
+from django.conf import settings
 
 
 def get_object_or_None(klass, *args, **kwargs):
@@ -17,3 +18,15 @@ def get_object_or_None(klass, *args, **kwargs):
     except queryset.model.DoesNotExist:
         return None
 
+
+
+def get_config(key, default):
+    """
+    Get settings from django.conf if exists,
+    return default value otherwise
+
+    example:
+
+    ADMIN_EMAIL = get_config('ADMIN_EMAIL', 'default@email.com')
+    """
+    return getattr(settings, key, default)

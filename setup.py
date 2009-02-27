@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 setup(
     name = "django-annoying",
-    version = "0.5.1",
+    version = "0.6.0",
     packages = find_packages(),
     author = "Anderson",
     author_email = "self.anderson@gmail.com",
@@ -13,6 +13,7 @@ setup(
             - signals decorator - allow use signals as decorators.
             - ajax_request decorator - returns JsonResponse with this dict as content.
             - get_object_or_None function - similar to get_object_or_404, but returns None if object not found.
+            - get_config function - get settings from django.conf if exists, return default value otherwise.
             - AutoOneToOne field - creates related object on first call if it doesnt exists yet.
             - HttpResponseReload - reload and stay on same page from where request was made.
 
@@ -27,11 +28,11 @@ setup(
 
         **Download:**
 
-            - hg clone http://hg.assembla.com/django-annoying
+            - hg clone https://offline@bitbucket.org/offline/django-annoying/
 
     """,
     license = "BSD",
     keywords = "django",
-    url = "http://www.assembla.com/spaces/django-annoying",
+    url = "http://bitbucket.org/offline/django-annoying/wiki/Home",
 )
 
