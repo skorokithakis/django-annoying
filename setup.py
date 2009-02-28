@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 setup(
     name = "django-annoying",
-    version = "0.6.0",
+    version = "0.7.0",
     packages = find_packages(),
     author = "Anderson",
     author_email = "self.anderson@gmail.com",
@@ -12,6 +12,7 @@ setup(
             - render_to decorator - reduce typing in django views.
             - signals decorator - allow use signals as decorators.
             - ajax_request decorator - returns JsonResponse with this dict as content.
+            - autostrip decoratro - strip text form fields before validation
             - get_object_or_None function - similar to get_object_or_404, but returns None if object not found.
             - get_config function - get settings from django.conf if exists, return default value otherwise.
             - AutoOneToOne field - creates related object on first call if it doesnt exists yet.
