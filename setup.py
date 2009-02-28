@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 setup(
     name = "django-annoying",
-    version = "0.7.0",
+    version = "0.7.1",
     packages = find_packages(),
     author = "Anderson",
     author_email = "self.anderson@gmail.com",
@@ -29,7 +29,7 @@ setup(
 
         **Download:**
 
-            - hg clone https://offline@bitbucket.org/offline/django-annoying/
+            - hg clone http://bitbucket.org/offline/django-annoying/
 
     """,
     license = "BSD",
