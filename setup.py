@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 setup(
     name = "django-annoying",
-    version = "0.7.1",
+    version = "0.7.2",
     packages = find_packages(),
     author = "Anderson",
     author_email = "self.anderson@gmail.com",
@@ -17,6 +17,7 @@ setup(
             - get_config function - get settings from django.conf if exists, return default value otherwise.
             - AutoOneToOne field - creates related object on first call if it doesnt exists yet.
             - HttpResponseReload - reload and stay on same page from where request was made.
+            - StaticServer middleware - instead of configuring urls.py, just add this middleware and it will serve you static files
 
                      
 
