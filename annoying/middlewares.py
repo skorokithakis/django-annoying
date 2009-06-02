@@ -13,6 +13,6 @@ class StaticServe(object):
 
     def process_request(self, request):
         if settings.DEBUG:
-            match = regex.search(request.path)
+            match = self.regex.search(request.path)
             if match:
                 return serve(request, match.group(1), settings.MEDIA_ROOT)
