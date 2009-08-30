@@ -5,7 +5,21 @@ from django.db.models import signals as signalmodule
 from django.http import HttpResponse
 from django.utils import simplejson
 
-__all__ = ['render_to', 'signals', 'ajax_request']
+__all__ = ['render_to', 'signals', 'ajax_request', 'autostrip']
+
+
+try:
+    from functools import wraps
+except ImportError: 
+    def wraps(wrapped, assigned=('__module__', '__name__', '__doc__'),
+              updated=('__dict__',)):
+        def inner(wrapper):
+            for attr in assigned:
+                setattr(wrapper, attr, getattr(wrapped, attr))
+            for attr in updated:
+                getattr(wrapper, attr).update(getattr(wrapped, attr, {}))
+            return wrapper
+        return inner
 
 
 def render_to(template=None):
@@ -51,6 +65,7 @@ def render_to(template=None):
 
     """
     def renderer(function):
+        @wraps(function)
         def wrapper(request, *args, **kwargs):
             output = function(request, *args, **kwargs)
             if not isinstance(output, dict):
@@ -139,6 +154,7 @@ def ajax_request(func):
             news_titles = [entry.title for entry in news]
             return {'news_titles': news_titles}
     """
+    @wraps(function)
     def wrapper(request, *args, **kwargs):
         response = func(request, *args, **kwargs)
         if isinstance(response, dict):
