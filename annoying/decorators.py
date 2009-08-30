@@ -154,7 +154,7 @@ def ajax_request(func):
             news_titles = [entry.title for entry in news]
             return {'news_titles': news_titles}
     """
-    @wraps(function)
+    @wraps(func)
     def wrapper(request, *args, **kwargs):
         response = func(request, *args, **kwargs)
         if isinstance(response, dict):
