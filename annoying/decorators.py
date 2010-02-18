@@ -33,6 +33,7 @@ def render_to(template=None, mimetype="text/html"):
 
     Parameters:
      - template: template name to use
+     - mimetype: content type to send in response headers
 
     Examples:
     # 1. Template name in decorator parameters
@@ -50,7 +51,9 @@ def render_to(template=None, mimetype="text/html"):
                                   context_instance=RequestContext(request))
 
 
-    # 2. Template name as TEMPLATE item value in return dictionary
+    # 2. Template name as TEMPLATE item value in return dictionary.
+         if TEMPLATE is given then its value will have higher priority 
+         than render_to argument.
 
     @render_to()
     def foo(request, category):
