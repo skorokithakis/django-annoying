@@ -22,12 +22,13 @@ except ImportError:
         return inner
 
 
-def render_to(template=None):
+def render_to(template=None, mimetype="text/html"):
     """
-    Decorator for Django views that sends returned dict to render_to_response function.
+    Decorator for Django views that sends returned dict to render_to_response 
+    function.
 
-    Template name can be decorator parameter or TEMPLATE item in returned dictionary.
-    RequestContext always added as context instance.
+    Template name can be decorator parameter or TEMPLATE item in returned 
+    dictionary.  RequestContext always added as context instance.
     If view doesn't return dict then decorator simply returns output.
 
     Parameters:
@@ -71,7 +72,8 @@ def render_to(template=None):
             if not isinstance(output, dict):
                 return output
             tmpl = output.pop('TEMPLATE', template)
-            return render_to_response(tmpl, output, context_instance=RequestContext(request))
+            return render_to_response(tmpl, output, \
+                        context_instance=RequestContext(request), mimetype=mimetype)
         return wrapper
     return renderer
 
