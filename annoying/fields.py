@@ -17,7 +17,7 @@ class AutoSingleRelatedObjectDescriptor(SingleRelatedObjectDescriptor):
 
 class AutoOneToOneField(OneToOneField):
     '''
-    OneToOneField creates related object on first call if it doesnt exists yet.
+    OneToOneField creates related object on first call if it doesnt exist yet.
     Use it instead of original OneToOne field.
 
     example:
