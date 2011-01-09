@@ -22,7 +22,7 @@ except ImportError:
         return inner
 
 
-def render_to(template=None, mimetype="text/html"):
+def render_to(template=None, mimetype=None):
     """
     Decorator for Django views that sends returned dict to render_to_response 
     function.
