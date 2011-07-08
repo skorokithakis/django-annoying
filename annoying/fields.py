@@ -12,7 +12,10 @@ class AutoSingleRelatedObjectDescriptor(SingleRelatedObjectDescriptor):
         except self.related.model.DoesNotExist:
             obj = self.related.model(**{self.related.field.name: instance})
             obj.save()
-            return obj
+            # Don't return obj directly, otherwise it won't be added
+            # to Django's cache, and the first 2 calls to obj.relobj
+            # will return 2 different in-memory objects
+            return super(AutoSingleRelatedObjectDescriptor, self).__get__(instance, instance_type)
 
 
 class AutoOneToOneField(OneToOneField):
