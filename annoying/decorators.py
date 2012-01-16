@@ -10,7 +10,7 @@ __all__ = ['render_to', 'signals', 'ajax_request', 'autostrip']
 
 try:
     from functools import wraps
-except ImportError: 
+except ImportError:
     def wraps(wrapped, assigned=('__module__', '__name__', '__doc__'),
               updated=('__dict__',)):
         def inner(wrapper):
@@ -24,10 +24,10 @@ except ImportError:
 
 def render_to(template=None, mimetype=None):
     """
-    Decorator for Django views that sends returned dict to render_to_response 
+    Decorator for Django views that sends returned dict to render_to_response
     function.
 
-    Template name can be decorator parameter or TEMPLATE item in returned 
+    Template name can be decorator parameter or TEMPLATE item in returned
     dictionary.  RequestContext always added as context instance.
     If view doesn't return dict then decorator simply returns output.
 
@@ -40,31 +40,31 @@ def render_to(template=None, mimetype=None):
 
     @render_to('template.html')
     def foo(request):
-        bar = Bar.object.all()  
+        bar = Bar.object.all()
         return {'bar': bar}
 
-    # equals to 
+    # equals to
     def foo(request):
-        bar = Bar.object.all()  
-        return render_to_response('template.html', 
-                                  {'bar': bar}, 
+        bar = Bar.object.all()
+        return render_to_response('template.html',
+                                  {'bar': bar},
                                   context_instance=RequestContext(request))
 
 
     # 2. Template name as TEMPLATE item value in return dictionary.
-         if TEMPLATE is given then its value will have higher priority 
+         if TEMPLATE is given then its value will have higher priority
          than render_to argument.
 
     @render_to()
     def foo(request, category):
         template_name = '%s.html' % category
         return {'bar': bar, 'TEMPLATE': template_name}
-    
+
     #equals to
     def foo(request, category):
         template_name = '%s.html' % category
-        return render_to_response(template_name, 
-                                  {'bar': bar}, 
+        return render_to_response(template_name,
+                                  {'bar': bar},
                                   context_instance=RequestContext(request))
 
     """
@@ -98,8 +98,8 @@ class Signals(object):
        # connect to any signal
        signals.register_signal(siginstance, signame) # and then as in example above
 
-       or 
-        
+       or
+
        @signals(siginstance, sender=YourModel)
        def sighandler(instance, **kwargs):
            pass
@@ -152,7 +152,7 @@ def ajax_request(func):
     If view returned serializable dict, returns JsonResponse with this dict as content.
 
     example:
-        
+
         @ajax_request
         def my_view(request):
             news = News.objects.all()
@@ -162,7 +162,7 @@ def ajax_request(func):
     @wraps(func)
     def wrapper(request, *args, **kwargs):
         response = func(request, *args, **kwargs)
-        if isinstance(response, dict):
+        if isinstance(response, dict) or isinstance(response, list):
             return JsonResponse(response)
         else:
             return response
@@ -179,7 +179,7 @@ def autostrip(cls):
         email = forms.EmailField()
 
     PersonForm = autostrip(PersonForm)
-    
+
     #or you can use @autostrip in python >= 2.6
 
     Author: nail.xx

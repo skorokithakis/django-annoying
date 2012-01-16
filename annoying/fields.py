@@ -21,7 +21,7 @@ class AutoOneToOneField(OneToOneField):
     Use it instead of original OneToOne field.
 
     example:
-        
+
         class MyProfile(models.Model):
             user = AutoOneToOneField(User, primary_key=True)
             home_page = models.URLField(max_length=255, blank=True)
@@ -63,7 +63,7 @@ class JSONField(models.TextField):
     def get_db_prep_save(self, value, *args, **kwargs):
         if value == "":
             return None
-        if isinstance(value, dict):
+        if isinstance(value, dict) or isinstance(value, list):
             value = json.dumps(value, cls=DjangoJSONEncoder)
         return super(JSONField, self).get_db_prep_save(value, *args, **kwargs)
 
