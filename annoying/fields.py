@@ -70,3 +70,8 @@ class JSONField(models.TextField):
             value = json.dumps(value, cls=DjangoJSONEncoder)
         return super(JSONField, self).get_db_prep_save(value, *args, **kwargs)
 
+    def value_from_object(self, obj):
+        value = super(JSONField, self).value_from_object(obj)
+        if self.null and value is None:
+            return None
+        return json.dumps(value)
