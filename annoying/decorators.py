@@ -163,7 +163,9 @@ def ajax_request(func):
     def wrapper(request, *args, **kwargs):
         response = func(request, *args, **kwargs)
         if isinstance(response, dict) or isinstance(response, list):
-            return JsonResponse(response)
+            json_response = JsonResponse(response)
+            json_response['content-length'] = len(json_response.content)
+            return json_response
         else:
             return response
     return wrapper
