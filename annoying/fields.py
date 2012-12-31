@@ -1,8 +1,13 @@
 from django.db import models
 from django.db.models import OneToOneField
-from django.utils import simplejson as json
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models.fields.related import SingleRelatedObjectDescriptor
+
+# Try to be compatible with Django 1.5+.
+try:
+    import json
+except ImportError:
+    from django.utils import simplejson as json
 
 
 class AutoSingleRelatedObjectDescriptor(SingleRelatedObjectDescriptor):
