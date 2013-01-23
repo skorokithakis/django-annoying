@@ -6,31 +6,27 @@ framework.
 
 ### Features
 
--   render\_to decorator - reduce typing in django views.
--   signals decorator - allow use signals as decorators.
--   ajax\_request decorator - returns JsonResponse with dict as content.
--   autostrip decorator - strip form text fields before validation
--   get\_object\_or\_None function - similar to get\_object\_or\_404,
-    but returns None if object not found.
--   get\_config function - get settings from django.conf if exists,
-    return default value otherwise.
--   AutoOneToOne field - creates related object on first call if it
-    doesnt exists yet.
--   JSONField - Field that store python object as json and retrieves it
-    back as python object.
--   HttpResponseReload - reload and stay on same page from where request
+-   render\_to decorator - Reduce typing in django views.
+-   signals decorator - Allow using signals as decorators.
+-   ajax\_request decorator - Returns JsonResponse with dict as content.
+-   autostrip decorator - Strip form text fields before validation
+-   get\_object\_or\_None function - Similar to get\_object\_or\_404, but returns None if object is not found.
+-   get\_config function - Get settings from django.conf if exists, return a default value otherwise.
+-   AutoOneToOne field - Creates a related object on first call if it doesnt exist yet.
+-   JSONField - A field that stores a Python object as JSON and retrieves it
+    back as Python object.
+-   HttpResponseReload - reload and stay on same page from where the request
     was made.
 -   StaticServer middleware - instead of configuring urls.py, just add
-    this middleware and it will serve your static files when you in
-    debug mode
+    this middleware and it will serve your static files when you are in
+    debug mode.
 
-### Installation instruction
+### Installation instructions
 
--   Copy annoying directory to your django project or put in on
-    PYTHONPATH
--   Also you can run sudo python setup.py install, sudo easy\_install
-    django-annoying, or sudo pip install django-annoying
--   Add "annoying" under INSTALLED\_APPS in your settings.py file
+-   Copy the `annoying` directory to your django project or put in on your PYTHONPATH.
+-   You can also run `sudo python setup.py install`, `sudo easy\_install django-annoying`,
+    or `sudo pip install django-annoying`.
+-   Add `"annoying"` under INSTALLED\_APPS in your `settings.py` file.
 
 Examples
 --------
@@ -171,8 +167,8 @@ example:
     )
 
 It will serve static files in debug mode. Also it helps when you debug
-one of you middlewares by responding to static requests before they get
-to debuged middleware and will save you from typing 100 times "continue"
-in debuger.
+one of your middleware by responding to static requests before they get
+to debugged middleware and will save you from constantly typing "continue"
+in debugger.
 
 Used on [python](http://pyplanet.org) community portal.
