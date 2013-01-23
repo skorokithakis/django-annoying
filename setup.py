@@ -1,10 +1,10 @@
 from setuptools import setup, find_packages
 setup(
     name = "django-annoying",
-    version = "0.7.6",
+    version = "0.7.7",
     packages = find_packages(),
     author = "Anderson",
-    author_email = "self.anderson@gmail.com",
+    author_email = "stavros@korokithakis.net",
     description = "This is a django application that tries to eliminate annoying things in the Django framework.",
     long_description = """
         **Features:**
@@ -20,21 +20,21 @@ setup(
             - StaticServer middleware - instead of configuring urls.py, just add this middleware and it will serve you static files.
             - JSONField - custom field that lets you easily store JSON data in one of your model fields.
 
-                     
+
 
         **Installation instruction:**
 
              - Copy annoying directory to your django project or put in PYTHONPATH
              - Also you can run sudo python setup.py install or sudo easy_install django-annoying
 
-                              
+
 
         **Download:**
 
-            - hg clone http://bitbucket.org/offline/django-annoying/
+            - hg clone http://bitbucket.org/Stavros/django-annoying/
 
     """,
     license = "BSD",
     keywords = "django",
-    url = "http://bitbucket.org/offline/django-annoying/wiki/Home",
+    url = "http://bitbucket.org/Stavros/django-annoying/wiki/Home",
 )
