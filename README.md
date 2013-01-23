@@ -10,14 +10,13 @@ framework.
 -   signals decorator - Allow using signals as decorators.
 -   ajax\_request decorator - Returns JsonResponse with dict as content.
 -   autostrip decorator - Strip form text fields before validation
--   get\_object\_or\_None function - Similar to get\_object\_or\_404, but returns None if object is not found.
+-   get\_object\_or\_None function - Similar to get\_object\_or\_404, but returns None if the object is not found.
 -   get\_config function - Get settings from django.conf if exists, return a default value otherwise.
--   AutoOneToOne field - Creates a related object on first call if it doesnt exist yet.
--   JSONField - A field that stores a Python object as JSON and retrieves it
-    back as Python object.
--   HttpResponseReload - reload and stay on same page from where the request
+-   AutoOneToOne field - Creates a related object on first call if it doesn't exist yet.
+-   JSONField - A field that stores a Python object as JSON and retrieves it as a Python object.
+-   HttpResponseReload - Reload and stay on same page from where the request
     was made.
--   StaticServer middleware - instead of configuring urls.py, just add
+-   StaticServer middleware - Instead of configuring urls.py, just add
     this middleware and it will serve your static files when you are in
     debug mode.
 
