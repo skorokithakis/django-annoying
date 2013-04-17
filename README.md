@@ -65,6 +65,8 @@ Examples
 
 ### signals decorator
 
+Note: Django now [includes this by default](https://docs.djangoproject.com/en/1.5/topics/signals/#connecting-receiver-functions).
+
     from annoying.decorators import signals
 
     # connect to registered signal
