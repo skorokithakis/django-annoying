@@ -8,7 +8,7 @@ from django.utils import simplejson
 import datetime
 import yaml
 
-__all__ = ['render_to', 'signals', 'ajax_request', 'autostrip']
+__all__ = ['render_to', 'signals', 'ajax_request', 'autostrip', 'accept_header_response']
 
 
 try:
@@ -198,7 +198,7 @@ def accept_header_response(func):
             return {'news_titles': news_titles}
     """
     @wraps(func)
-    def wrapper(request, *wargs, **kwargs):
+    def wrapper(request, *args, **kwargs):
         format_type = 'application/json'    
         try:
             for accepted_type in request.META['HTTP_ACCEPT'].split(','):
@@ -207,7 +207,7 @@ def accept_header_response(func):
                     break
         except KeyError:
             pass
-        response = view(request, *args, **kwargs)
+        response = func(request, *args, **kwargs)
         if isinstance(response, dict) or isinstance(response, list):
             data = FORMAT_TYPES[format_type](response)
             response = HttpResponse(data, content_type=format_type)
