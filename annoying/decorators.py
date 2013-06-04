@@ -155,7 +155,7 @@ try:
 except ImportError:
     pass
 
-def ajax_response(func):
+def ajax_request(func):
     """
     If view returned serializable dict, returns response in a format requested
     by HTTP_ACCEPT header. Defaults to JSON if none requested or match.
