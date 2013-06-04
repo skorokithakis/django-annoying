@@ -3,7 +3,11 @@ from django import forms
 from django.template import RequestContext
 from django.db.models import signals as signalmodule
 from django.http import HttpResponse
-from django.utils import simplejson
+# Try to be compatible with Django 1.5+.
+try:
+    import json
+except ImportError:
+    from django.utils import simplejson as json
 
 import datetime
 
@@ -83,7 +87,6 @@ def render_to(template=None, mimetype=None):
     return renderer
 
 
-
 class Signals(object):
     '''
     Convenient wrapper for working with Django's signals (or any other
@@ -142,18 +145,20 @@ signals = Signals()
 date_time_handler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
 
 FORMAT_TYPES = {
-    'application/json': lambda response: simplejson.dumps(response, default=date_time_handler),
-    'text/json':        lambda response: simplejson.dumps(response, default=date_time_handler),
+    'application/json': lambda response: json.dumps(response, default=date_time_handler),
+    'text/json':        lambda response: json.dumps(response, default=date_time_handler),
 }
 
 try:
     import yaml
+except ImportError:
+    pass
+else:
     FORMAT_TYPES.update({
         'application/yaml': yaml.dump,
         'text/yaml':        yaml.dump,
     })
-except ImportError:
-    pass
+
 
 def ajax_request(func):
     """
@@ -163,7 +168,7 @@ def ajax_request(func):
     Currently supports JSON or YAML (if installed), but can easily be extended.
 
     example:
-    
+
         @ajax_request
         def my_view(request):
             news = News.objects.all()
@@ -177,7 +182,7 @@ def ajax_request(func):
                 format_type = accepted_type
                 break
         else:
-            format_type = 'application/json'    
+            format_type = 'application/json'
         response = func(request, *args, **kwargs)
         if isinstance(response, dict) or isinstance(response, list):
             data = FORMAT_TYPES[format_type](response)
@@ -185,6 +190,7 @@ def ajax_request(func):
             response['content-length'] = len(data)
         return response
     return wrapper
+
 
 def autostrip(cls):
     """
@@ -208,4 +214,3 @@ def autostrip(cls):
         clean_func = get_clean_func(getattr(field_object, 'clean'))
         setattr(field_object, 'clean', clean_func)
     return cls
-
