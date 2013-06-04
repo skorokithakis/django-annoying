@@ -7,7 +7,7 @@ from django.utils import simplejson
 
 import datetime
 
-__all__ = ['render_to', 'signals', 'ajax_request', 'autostrip', 'accept_header_response']
+__all__ = ['render_to', 'signals', 'ajax_request', 'autostrip']
 
 
 try:
