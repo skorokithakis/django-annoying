@@ -6,7 +6,6 @@ from django.http import HttpResponse
 from django.utils import simplejson
 
 import datetime
-import yaml
 
 __all__ = ['render_to', 'signals', 'ajax_request', 'autostrip', 'accept_header_response']
 
@@ -140,58 +139,32 @@ class Signals(object):
 signals = Signals()
 
 
-
-class JsonResponse(HttpResponse):
-    """
-    HttpResponse descendant, which return response with ``application/json`` mimetype.
-    """
-    def __init__(self, data):
-        super(JsonResponse, self).__init__(content=simplejson.dumps(data), mimetype='application/json')
-
-
-
-def ajax_request(func):
-    """
-    If view returned serializable dict, returns JsonResponse with this dict as content.
-
-    example:
-
-        @ajax_request
-        def my_view(request):
-            news = News.objects.all()
-            news_titles = [entry.title for entry in news]
-            return {'news_titles': news_titles}
-    """
-    @wraps(func)
-    def wrapper(request, *args, **kwargs):
-        response = func(request, *args, **kwargs)
-        if isinstance(response, dict) or isinstance(response, list):
-            json_response = JsonResponse(response)
-            json_response['content-length'] = len(json_response.content)
-            return json_response
-        else:
-            return response
-    return wrapper
-
 date_time_handler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
 
 FORMAT_TYPES = {
     'application/json': lambda response: simplejson.dumps(response, default=date_time_handler),
     'text/json':        lambda response: simplejson.dumps(response, default=date_time_handler),
-    'application/yaml': yaml.dump,
-    'text/yaml':        yaml.dump,
 }
 
-def accept_header_response(func):
+try:
+    import yaml
+    FORMAT_TYPES.update({
+        'application/yaml': yaml.dump,
+        'text/yaml':        yaml.dump,
+    })
+except ImportError:
+    pass
+
+def ajax_response(func):
     """
     If view returned serializable dict, returns response in a format requested
     by HTTP_ACCEPT header. Defaults to JSON if none requested or match.
 
-    Currently supports JSON or YAML, but can easily be extended.
+    Currently supports JSON or YAML (if installed), but can easily be extended.
 
     example:
     
-        @accept_header_response
+        @ajax_response
         def my_view(request):
             news = News.objects.all()
             news_titles = [entry.title for entry in news]
@@ -199,14 +172,12 @@ def accept_header_response(func):
     """
     @wraps(func)
     def wrapper(request, *args, **kwargs):
-        format_type = 'application/json'    
-        try:
-            for accepted_type in request.META['HTTP_ACCEPT'].split(','):
-                if accepted_type in FORMAT_TYPES.keys():
-                    format_type = accepted_type
-                    break
-        except KeyError:
-            pass
+        for accepted_type in request.META.get('HTTP_ACCEPT', '').split(','):
+            if accepted_type in FORMAT_TYPES.keys():
+                format_type = accepted_type
+                break
+        else:
+            format_type = 'application/json'    
         response = func(request, *args, **kwargs)
         if isinstance(response, dict) or isinstance(response, list):
             data = FORMAT_TYPES[format_type](response)
