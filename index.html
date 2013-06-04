@@ -1,0 +1,259 @@
+<!doctype html>
+<!-- The Time Machine GitHub pages theme was designed and developed by Jon Rohan, on Feb 7, 2012. -->
+<!-- Follow him for fun. http://twitter.com/jonrohan. Tail his code on http://github.com/jonrohan -->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen"/>
+  <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="javascripts/script.js"></script>
+
+  <title>django-annoying</title>
+  <meta name="description" content="A django application that tries to eliminate annoying things in the Django framework.">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <header>
+      <h1 class="title">django-annoying</h1>
+    </header>
+    <div id="container">
+      <p class="tagline">A django application that tries to eliminate annoying things in the Django framework.</p>
+      <div id="main" role="main">
+        <div class="download-bar">
+        <div class="inner">
+          <a href="https://github.com/skorokithakis/django-annoying/tarball/master" class="download-button tar"><span>Download</span></a>
+          <a href="https://github.com/skorokithakis/django-annoying/zipball/master" class="download-button zip"><span>Download</span></a>
+          <a href="https://github.com/skorokithakis/django-annoying" class="code">View django-annoying on GitHub</a>
+        </div>
+        <span class="blc"></span><span class="trc"></span>
+        </div>
+        <article class="markdown-body">
+          <h2>
+<a name="description" class="anchor" href="#description"><span class="octicon octicon-link"></span></a>Description</h2>
+
+<p>This django application eliminates certain annoyances in the Django
+framework.</p>
+
+<h3>
+<a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h3>
+
+<ul>
+<li>  render_to decorator - Reduce typing in django views.</li>
+<li>  signals decorator - Allow using signals as decorators.</li>
+<li>  ajax_request decorator - Returns JsonResponse with dict as content.</li>
+<li>  autostrip decorator - Strip form text fields before validation</li>
+<li>  get_object_or_None function - Similar to get_object_or_404, but returns None if the object is not found.</li>
+<li>  get_config function - Get settings from django.conf if exists, return a default value otherwise.</li>
+<li>  AutoOneToOne field - Creates a related object on first call if it doesn't exist yet.</li>
+<li>  JSONField - A field that stores a Python object as JSON and retrieves it as a Python object.</li>
+<li>  HttpResponseReload - Reload and stay on same page from where the request
+was made.</li>
+<li>  StaticServer middleware - Instead of configuring urls.py, just add
+this middleware and it will serve your static files when you are in
+debug mode.</li>
+</ul><h3>
+<a name="installation-instructions" class="anchor" href="#installation-instructions"><span class="octicon octicon-link"></span></a>Installation instructions</h3>
+
+<ul>
+<li>  Copy the <code>annoying</code> directory to your django project or put in on your PYTHONPATH.</li>
+<li>  You can also run <code>sudo python setup.py install</code>, <code>sudo easy_install django-annoying</code>,
+or <code>sudo pip install django-annoying</code>.</li>
+<li>  Add <code>"annoying"</code> under INSTALLED_APPS in your <code>settings.py</code> file.</li>
+</ul><h2>
+<a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h2>
+
+<h3>
+<a name="render_to-decorator" class="anchor" href="#render_to-decorator"><span class="octicon octicon-link"></span></a>render_to decorator</h3>
+
+<pre><code>from annoying.decorators import render_to
+
+# 1. Template name in decorator parameters
+
+@render_to('template.html')
+def foo(request):
+    bar = Bar.object.all()
+    return {'bar': bar}
+
+# equals to
+def foo(request):
+    bar = Bar.object.all()
+    return render_to_response('template.html',
+                              {'bar': bar},
+                               context_instance=RequestContext(request))
+
+
+# 2. Template name as TEMPLATE item value in return dictionary
+
+@render_to()
+def foo(request, category):
+    template_name = '%s.html' % category
+    return {'bar': bar, 'TEMPLATE': template_name}
+
+#equals to
+def foo(request, category):
+    template_name = '%s.html' % category
+    return render_to_response(template_name,
+                              {'bar': bar},
+                              context_instance=RequestContext(request))
+</code></pre>
+
+<h3>
+<a name="signals-decorator" class="anchor" href="#signals-decorator"><span class="octicon octicon-link"></span></a>signals decorator</h3>
+
+<p>Note: Django now <a href="https://docs.djangoproject.com/en/1.5/topics/signals/#connecting-receiver-functions">includes this by default</a>.</p>
+
+<pre><code>from annoying.decorators import signals
+
+# connect to registered signal
+@signals.post_save(sender=YourModel)
+def sighandler(instance, **kwargs):
+    pass
+
+# connect to any signal
+signals.register_signal(siginstance, signame) # and then as in example above
+
+#or
+
+@signals(siginstance, sender=YourModel)
+def sighandler(instance, **kwargs):
+    pass
+
+#In any case defined function will remain as is, without any changes.
+</code></pre>
+
+<h3>
+<a name="ajax_request-decorator" class="anchor" href="#ajax_request-decorator"><span class="octicon octicon-link"></span></a>ajax_request decorator</h3>
+
+<p>The <code>ajax_request</code> decorator converts a <code>dict</code> or <code>list</code> returned by a view to a JSON or YAML object,
+depending on the HTTP <code>Accept</code> header (defaults to JSON, requires <code>PyYAML</code> if you want to accept YAML).</p>
+
+<pre><code>from annoying.decorators import ajax_request
+
+@ajax_request
+def my_view(request):
+    news = News.objects.all()
+    news_titles = [entry.title for entry in news]
+    return {'news_titles': news_titles}
+</code></pre>
+
+<h3>
+<a name="autostrip-decorator" class="anchor" href="#autostrip-decorator"><span class="octicon octicon-link"></span></a>autostrip decorator</h3>
+
+<pre><code>from annoying.decorators import autostrip
+
+class PersonForm(forms.Form):
+    name = forms.CharField(min_length=2, max_length=10)
+    email = forms.EmailField()
+
+PersonForm = autostrip(PersonForm)
+
+#or in python &gt;= 2.6
+
+@autostrip
+class PersonForm(forms.Form):
+    name = forms.CharField(min_length=2, max_length=10)
+    email = forms.EmailField()
+</code></pre>
+
+<h3>
+<a name="get_object_or_none-function" class="anchor" href="#get_object_or_none-function"><span class="octicon octicon-link"></span></a>get_object_or_None function</h3>
+
+<pre><code>from annoying.functions import get_object_or_None
+
+def get_user(request, user_id):
+    user = get_object_or_None(User, id=user_id)
+    if not user:
+        ...
+</code></pre>
+
+<h3>
+<a name="autoonetoonefield" class="anchor" href="#autoonetoonefield"><span class="octicon octicon-link"></span></a>AutoOneToOneField</h3>
+
+<pre><code>from annoying.fields import AutoOneToOneField
+
+
+class MyProfile(models.Model):
+    user = AutoOneToOneField(User, primary_key=True)
+    home_page = models.URLField(max_length=255, blank=True)
+    icq = models.IntegerField(blank=True, null=True)
+</code></pre>
+
+<h3>
+<a name="jsonfield" class="anchor" href="#jsonfield"><span class="octicon octicon-link"></span></a>JSONField</h3>
+
+<pre><code>from annoying.fields import JSONField
+
+
+#model
+class Page(models.Model):
+    data = JSONField(blank=True, null=True)
+
+
+
+# view or another place..
+page = Page.objects.get(pk=5)
+page.data = {'title': 'test', 'type': 3}
+page.save()
+</code></pre>
+
+<h3>
+<a name="get_config-function" class="anchor" href="#get_config-function"><span class="octicon octicon-link"></span></a>get_config function</h3>
+
+<pre><code>from annoying.functions import get_config
+
+ADMIN_EMAIL = get_config('ADMIN_EMAIL', 'default@email.com')
+</code></pre>
+
+<h3>
+<a name="staticserver-middleware" class="anchor" href="#staticserver-middleware"><span class="octicon octicon-link"></span></a>StaticServer middleware</h3>
+
+<p>Add this middleware as first item in MIDDLEWARE_CLASSES</p>
+
+<p>example:</p>
+
+<pre><code>MIDDLEWARE_CLASSES = (
+    'annoying.middlewares.StaticServe',
+    'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.doc.XViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+)
+</code></pre>
+
+<p>It will serve static files in debug mode. Also it helps when you debug
+one of your middleware by responding to static requests before they get
+to debugged middleware and will save you from constantly typing "continue"
+in debugger.</p>
+
+<p>Used on <a href="http://pyplanet.org">python</a> community portal.</p>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="owner">
+      <p><a href="https://github.com/skorokithakis" class="avatar"><img src="https://secure.gravatar.com/avatar/7beb0185431f33569b83b0625f24ea5f?s=30&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" width="48" height="48"/></a> <a href="https://github.com/skorokithakis">skorokithakis</a> maintains <a href="https://github.com/skorokithakis/django-annoying">django-annoying</a></p>
+
+
+      </div>
+      <div class="creds">
+        <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a><br/>theme by <a href="http://twitter.com/jonrohan/">Jon Rohan</a></small>
+      </div>
+    </footer>
+  </div>
+  <div class="current-section">
+    <a href="#top">Scroll to top</a>
+    <a href="https://github.com/skorokithakis/django-annoying/tarball/master" class="tar">tar</a><a href="https://github.com/skorokithakis/django-annoying/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
+    <p class="name"></p>
+  </div>
+
+  
+</body>
+</html>
