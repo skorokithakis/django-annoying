@@ -5,20 +5,21 @@ from django.http import HttpResponse
 
 from ..decorators import ajax_request
 
-RESPONSE_DICT = {
-    'bool': True,
-    'int': 1,
-    'list': [2, 3, 4],
-    'dict': {
-        'foo': 'bar',
-        'bar': 'bob',
-    },
-    'string': 'barry',
-}
+import datetime
 
 @ajax_request
 def ajax_request_view(request):
-    return RESPONSE_DICT
+    return {
+        'bool': True,
+        'int': 1,
+        'list': [2, 3, 4],
+        'dict': {
+            'foo': 'bar',
+            'bar': 'bob',
+        },
+        'string': 'barry',
+        'date': datetime.datetime(2013, 12, 25, 15, 16),
+    }
 
 @ajax_request
 def ajax_request_httpresponse_view(request):
