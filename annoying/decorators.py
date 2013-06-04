@@ -5,6 +5,9 @@ from django.db.models import signals as signalmodule
 from django.http import HttpResponse
 from django.utils import simplejson
 
+import datetime
+import yaml
+
 __all__ = ['render_to', 'signals', 'ajax_request', 'autostrip']
 
 
@@ -170,6 +173,47 @@ def ajax_request(func):
             return response
     return wrapper
 
+date_time_handler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
+
+FORMAT_TYPES = {
+    'application/json': lambda response: simplejson.dumps(response, default=date_time_handler),
+    'text/json':        lambda response: simplejson.dumps(response, default=date_time_handler),
+    'application/yaml': yaml.dump,
+    'text/yaml':        yaml.dump,
+}
+
+def accept_header_response(func):
+    """
+    If view returned serializable dict, returns response in a format requested
+    by HTTP_ACCEPT header. Defaults to JSON if none requested or match.
+
+    Currently supports JSON or YAML, but can easily be extended.
+
+    example:
+    
+        @accept_header_response
+        def my_view(request):
+            news = News.objects.all()
+            news_titles = [entry.title for entry in news]
+            return {'news_titles': news_titles}
+    """
+    @wraps(func)
+    def wrapper(request, *wargs, **kwargs):
+        format_type = 'application/json'    
+        try:
+            for accepted_type in request.META['HTTP_ACCEPT'].split(','):
+                if accepted_type in FORMAT_TYPES.keys():
+                    format_type = accepted_type
+                    break
+        except KeyError:
+            pass
+        response = view(request, *args, **kwargs)
+        if isinstance(response, dict) or isinstance(response, list):
+            data = FORMAT_TYPES[format_type](response)
+            response = HttpResponse(data, content_type=format_type)
+            response['content-length'] = len(data)
+        return response
+    return wrapper
 
 def autostrip(cls):
     """
