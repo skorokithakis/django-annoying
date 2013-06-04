@@ -188,7 +188,7 @@ def ajax_request(func):
         else:
             format_type = 'application/json'
         response = func(request, *args, **kwargs)
-        if isinstance(response, dict) or isinstance(response, list):
+        if not isinstance(response, HttpResponse):
             data = FORMAT_TYPES[format_type](response)
             response = HttpResponse(data, content_type=format_type)
             response['content-length'] = len(data)
