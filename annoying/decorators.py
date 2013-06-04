@@ -164,7 +164,7 @@ def ajax_request(func):
 
     example:
     
-        @ajax_response
+        @ajax_request
         def my_view(request):
             news = News.objects.all()
             news_titles = [entry.title for entry in news]
