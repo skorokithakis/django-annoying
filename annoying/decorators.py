@@ -142,7 +142,11 @@ class Signals(object):
 signals = Signals()
 
 
-date_time_handler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
+def date_time_handler(obj):
+    if isinstance(obj, datetime.datetime):
+        return obj.isoformat()
+    else:
+        raise TypeError("%r is not JSON serializable" % obj)
 
 FORMAT_TYPES = {
     'application/json': lambda response: json.dumps(response, default=date_time_handler),
