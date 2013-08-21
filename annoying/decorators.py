@@ -114,7 +114,7 @@ class Signals(object):
         self._signals = {}
 
         # register all Django's default signals
-        for k, v in signalmodule.__dict__.iteritems():
+        for k, v in signalmodule.__dict__.items():
             # that's hardcode, but IMHO it's better than isinstance
             if not k.startswith('__') and k != 'Signal':
                 self.register_signal(v, k)
