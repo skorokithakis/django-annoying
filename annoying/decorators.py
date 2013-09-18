@@ -81,6 +81,10 @@ def render_to(template=None, mimetype=None):
             if not isinstance(output, dict):
                 return output
             tmpl = output.pop('TEMPLATE', template)
+            if tmpl is None:
+                template_dir = '.'.join(function.__module__.split('.')[:-1])
+                template_dir = template_dir.replace('.', '/')
+                tmpl = template_dir + '/' + function.func_name + ".html"
             return render_to_response(tmpl, output, \
                         context_instance=RequestContext(request), mimetype=mimetype)
         return wrapper
