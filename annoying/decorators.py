@@ -10,6 +10,7 @@ except ImportError:
     from django.utils import simplejson as json
 
 import datetime
+import os
 
 __all__ = ['render_to', 'signals', 'ajax_request', 'autostrip']
 
@@ -81,6 +82,9 @@ def render_to(template=None, mimetype=None):
             if not isinstance(output, dict):
                 return output
             tmpl = output.pop('TEMPLATE', template)
+            if tmpl is None:
+                template_dir = os.path.join(*function.__module__.split('.')[:-1])
+                tmpl = os.path.join(template_dir, function.func_name + ".html")
             return render_to_response(tmpl, output, \
                         context_instance=RequestContext(request), mimetype=mimetype)
         return wrapper
