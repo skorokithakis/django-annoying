@@ -3,6 +3,7 @@ import sys
 from os import path as osp
 
 this = osp.splitext(osp.basename(__file__))[0]
+BASE_DIR = osp.dirname(__file__)
 
 from django.conf import settings
 SETTINGS = dict(
@@ -11,6 +12,7 @@ SETTINGS = dict(
     TEMPLATE_DEBUG=True,
     ROOT_URLCONF=this,
     INSTALLED_APPS=('django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions', 'annoying'),
+    TEMPLATE_DIRS=(osp.join(BASE_DIR, 'annoying', 'tests', 'templates'),),
 )
 
 if not settings.configured:

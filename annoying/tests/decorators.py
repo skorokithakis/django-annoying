@@ -33,3 +33,20 @@ class AJAXRequestTestCase(TestCase):
         response = self.client.get('/ajax-request-httpresponse/')
         self.assertEquals(response.content, "Data")
         self.assertTrue('text/html' in response['content-type'])
+
+
+class RenderToTestCase(TestCase):
+    """Test cases for render_to"""
+    urls = 'annoying.tests.urls'
+
+    def test_content_type_kwarg(self):
+        response = self.client.get('/render-to-content-type-kwarg/')
+        self.assertTrue('text/plain' in response['content-type'])
+
+    def test_mimetype_kwarg(self):
+        response = self.client.get('/render-to-mimetype-kwarg/')
+        self.assertTrue('text/plain' in response['content-type'])
+
+    def test_content_type_positional(self):
+        response = self.client.get('/render-to-content-type-positional/')
+        self.assertTrue('text/plain' in response['content-type'])
