@@ -1,5 +1,6 @@
 from django.shortcuts import render_to_response
 from django import forms
+from django import VERSION as DJANGO_VERSION
 from django.template import RequestContext
 from django.db.models import signals as signalmodule
 from django.http import HttpResponse
@@ -29,7 +30,7 @@ except ImportError:
         return inner
 
 
-def render_to(template=None, mimetype=None):
+def render_to(template=None, content_type=None, mimetype=None):
     """
     Decorator for Django views that sends returned dict to render_to_response
     function.
@@ -40,7 +41,8 @@ def render_to(template=None, mimetype=None):
 
     Parameters:
      - template: template name to use
-     - mimetype: content type to send in response headers
+     - content_type: content type to send in response headers
+     - mimetype: content type to send in response headers (deprecated)
 
     Examples:
     # 1. Template name in decorator parameters
@@ -85,8 +87,15 @@ def render_to(template=None, mimetype=None):
             if tmpl is None:
                 template_dir = os.path.join(*function.__module__.split('.')[:-1])
                 tmpl = os.path.join(template_dir, function.func_name + ".html")
-            return render_to_response(tmpl, output, \
-                        context_instance=RequestContext(request), mimetype=mimetype)
+            # Explicit version check to avoid swallowing other exceptions
+            if DJANGO_VERSION[0] >= 1 and DJANGO_VERSION[1] >= 3:
+                return render_to_response(tmpl, output, \
+                        context_instance=RequestContext(request),
+                        content_type=content_type or mimetype)
+            else:
+                return render_to_response(tmpl, output, \
+                        context_instance=RequestContext(request),
+                        mimetype=content_type or mimetype)
         return wrapper
     return renderer
 
