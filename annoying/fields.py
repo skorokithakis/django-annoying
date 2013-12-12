@@ -3,6 +3,13 @@ from django.db.models import OneToOneField
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models.fields.related import SingleRelatedObjectDescriptor
 
+# South support.
+try:
+    from south.modelsinspector import add_introspection_rules
+    SOUTH = True
+except ImportError:
+    SOUTH = False
+
 # Try to be compatible with Django 1.5+.
 try:
     import json
@@ -37,6 +44,21 @@ class AutoOneToOneField(OneToOneField):
     '''
     def contribute_to_related_class(self, cls, related):
         setattr(cls, related.get_accessor_name(), AutoSingleRelatedObjectDescriptor(related))
+
+if SOUTH:
+    add_introspection_rules([
+        (
+            (AutoOneToOneField,),
+            [],
+            {
+                "to": ["rel.to", {}],
+                "to_field": ["rel.field_name", {"default_attr": "rel.to._meta.pk.name"}],
+                "related_name": ["rel.related_name", {"default": None}],
+                "db_index": ["db_index", {"default": True}],
+            },
+        )
+    ],
+    ["^annoying\.fields\.AutoOneToOneField"])
 
 
 class JSONField(models.TextField):
@@ -80,3 +102,6 @@ class JSONField(models.TextField):
         if self.null and value is None:
             return None
         return json.dumps(value)
+
+if SOUTH:
+    add_introspection_rules([], ["^annoying.fields.JSONField"])

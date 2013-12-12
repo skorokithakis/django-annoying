@@ -1,11 +1,17 @@
 from django.shortcuts import render_to_response
 from django import forms
+from django import VERSION as DJANGO_VERSION
 from django.template import RequestContext
 from django.db.models import signals as signalmodule
 from django.http import HttpResponse
-from django.utils import simplejson
+# Try to be compatible with Django 1.5+.
+try:
+    import json
+except ImportError:
+    from django.utils import simplejson as json
 
 import datetime
+import os
 
 __all__ = ['render_to', 'signals', 'ajax_request', 'autostrip']
 
@@ -24,7 +30,7 @@ except ImportError:
         return inner
 
 
-def render_to(template=None, mimetype=None):
+def render_to(template=None, content_type=None, mimetype=None):
     """
     Decorator for Django views that sends returned dict to render_to_response
     function.
@@ -35,7 +41,8 @@ def render_to(template=None, mimetype=None):
 
     Parameters:
      - template: template name to use
-     - mimetype: content type to send in response headers
+     - content_type: content type to send in response headers
+     - mimetype: content type to send in response headers (deprecated)
 
     Examples:
     # 1. Template name in decorator parameters
@@ -77,11 +84,20 @@ def render_to(template=None, mimetype=None):
             if not isinstance(output, dict):
                 return output
             tmpl = output.pop('TEMPLATE', template)
-            return render_to_response(tmpl, output, \
-                        context_instance=RequestContext(request), mimetype=mimetype)
+            if tmpl is None:
+                template_dir = os.path.join(*function.__module__.split('.')[:-1])
+                tmpl = os.path.join(template_dir, function.func_name + ".html")
+            # Explicit version check to avoid swallowing other exceptions
+            if DJANGO_VERSION[0] >= 1 and DJANGO_VERSION[1] >= 3:
+                return render_to_response(tmpl, output, \
+                        context_instance=RequestContext(request),
+                        content_type=content_type or mimetype)
+            else:
+                return render_to_response(tmpl, output, \
+                        context_instance=RequestContext(request),
+                        mimetype=content_type or mimetype)
         return wrapper
     return renderer
-
 
 
 class Signals(object):
@@ -139,21 +155,27 @@ class Signals(object):
 signals = Signals()
 
 
-date_time_handler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
+def date_time_handler(obj):
+    if isinstance(obj, datetime.datetime):
+        return obj.isoformat()
+    else:
+        raise TypeError("%r is not JSON serializable" % obj)
 
 FORMAT_TYPES = {
-    'application/json': lambda response: simplejson.dumps(response, default=date_time_handler),
-    'text/json':        lambda response: simplejson.dumps(response, default=date_time_handler),
+    'application/json': lambda response: json.dumps(response, default=date_time_handler),
+    'text/json':        lambda response: json.dumps(response, default=date_time_handler),
 }
 
 try:
     import yaml
+except ImportError:
+    pass
+else:
     FORMAT_TYPES.update({
         'application/yaml': yaml.dump,
         'text/yaml':        yaml.dump,
     })
-except ImportError:
-    pass
+
 
 def ajax_request(func):
     """
@@ -163,7 +185,7 @@ def ajax_request(func):
     Currently supports JSON or YAML (if installed), but can easily be extended.
 
     example:
-    
+
         @ajax_request
         def my_view(request):
             news = News.objects.all()
@@ -177,14 +199,15 @@ def ajax_request(func):
                 format_type = accepted_type
                 break
         else:
-            format_type = 'application/json'    
+            format_type = 'application/json'
         response = func(request, *args, **kwargs)
-        if isinstance(response, dict) or isinstance(response, list):
+        if not isinstance(response, HttpResponse):
             data = FORMAT_TYPES[format_type](response)
             response = HttpResponse(data, content_type=format_type)
             response['content-length'] = len(data)
         return response
     return wrapper
+
 
 def autostrip(cls):
     """
@@ -208,4 +231,3 @@ def autostrip(cls):
         clean_func = get_clean_func(getattr(field_object, 'clean'))
         setattr(field_object, 'clean', clean_func)
     return cls
-

@@ -87,6 +87,9 @@ Note: Django now [includes this by default](https://docs.djangoproject.com/en/1.
 
 ### ajax\_request decorator
 
+The `ajax_request` decorator converts a `dict` or `list` returned by a view to a JSON or YAML object,
+depending on the HTTP `Accept` header (defaults to JSON, requires `PyYAML` if you want to accept YAML).
+
     from annoying.decorators import ajax_request
 
     @ajax_request
