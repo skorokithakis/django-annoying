@@ -1,3 +1,4 @@
+import importlib
 from django.shortcuts import render_to_response
 from django import forms
 from django import VERSION as DJANGO_VERSION
@@ -204,7 +205,14 @@ def ajax_request(func):
         response = func(request, *args, **kwargs)
         if not isinstance(response, HttpResponse):
             if settings.hasattr('FORMAT_TYPES'):
-                data = settings.FORMAT_TYPES[format_type](response)
+                format_type_handler = settings.FORMAT_TYPES[format_type]
+                if hasattr(format_type_handler, '__call__'):
+                    data = format_type_handler(response)
+                elif isinstance(format_type_handler, basestring):
+                    module_name, function_name = format_type_handler.rsplit('.',1)
+                    module = importlib.import_module(module_name)
+                    function = getattr(module, function_name)
+                    data = function(response)
             else:
                 data = FORMAT_TYPES[format_type](response)
             response = HttpResponse(data, content_type=format_type)
