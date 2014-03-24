@@ -204,7 +204,7 @@ def ajax_request(func):
             format_type = 'application/json'
         response = func(request, *args, **kwargs)
         if not isinstance(response, HttpResponse):
-            if settings.hasattr('FORMAT_TYPES'):
+            if hasattr(settings, 'FORMAT_TYPES'):
                 format_type_handler = settings.FORMAT_TYPES[format_type]
                 if hasattr(format_type_handler, '__call__'):
                     data = format_type_handler(response)
