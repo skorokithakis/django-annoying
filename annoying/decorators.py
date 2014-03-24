@@ -4,6 +4,7 @@ from django import VERSION as DJANGO_VERSION
 from django.template import RequestContext
 from django.db.models import signals as signalmodule
 from django.http import HttpResponse
+from django.conf import settings
 # Try to be compatible with Django 1.5+.
 try:
     import json
@@ -202,7 +203,10 @@ def ajax_request(func):
             format_type = 'application/json'
         response = func(request, *args, **kwargs)
         if not isinstance(response, HttpResponse):
-            data = FORMAT_TYPES[format_type](response)
+            if settings.hasattr('FORMAT_TYPES'):
+                data = settings.FORMAT_TYPES[format_type](response)
+            else:
+                data = FORMAT_TYPES[format_type](response)
             response = HttpResponse(data, content_type=format_type)
             response['content-length'] = len(data)
         return response
