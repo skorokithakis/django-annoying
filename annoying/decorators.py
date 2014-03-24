@@ -209,9 +209,9 @@ def ajax_request(func):
                 if hasattr(format_type_handler, '__call__'):
                     data = format_type_handler(response)
                 elif isinstance(format_type_handler, basestring):
-                    module_name, function_name = format_type_handler.rsplit('.',1)
-                    module = importlib.import_module(module_name)
-                    function = getattr(module, function_name)
+                    mod_name, func_name = format_type_handler.rsplit('.', 1)
+                    module = importlib.import_module(mod_name)
+                    function = getattr(module, func_name)
                     data = function(response)
             else:
                 data = FORMAT_TYPES[format_type](response)
