@@ -210,7 +210,7 @@ def ajax_request(func):
                     data = format_type_handler(response)
                 elif isinstance(format_type_handler, basestring):
                     mod_name, func_name = format_type_handler.rsplit('.', 1)
-                    module = importlib.import_module(mod_name)
+                    module = __import__(mod_name, fromlist=[func_name])
                     function = getattr(module, func_name)
                     data = function(response)
             else:
