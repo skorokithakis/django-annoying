@@ -3,7 +3,7 @@ setup(
     name="django-annoying",
     version="0.7.9",
     packages=find_packages(),
-    author="Anderson",
+    author="Stavros Korokithakis",
     author_email="stavros@korokithakis.net",
     description="This is a django application that tries to eliminate annoying things in the Django framework.",
     long_description="""
