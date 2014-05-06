@@ -1,4 +1,5 @@
 from django.db import models
+from django.db import transaction
 from django.db.models import OneToOneField
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models.fields.related import SingleRelatedObjectDescriptor
@@ -19,15 +20,16 @@ except ImportError:
 
 class AutoSingleRelatedObjectDescriptor(SingleRelatedObjectDescriptor):
     def __get__(self, instance, instance_type=None):
-        try:
-            return super(AutoSingleRelatedObjectDescriptor, self).__get__(instance, instance_type)
-        except self.related.model.DoesNotExist:
-            obj = self.related.model(**{self.related.field.name: instance})
-            obj.save()
-            # Don't return obj directly, otherwise it won't be added
-            # to Django's cache, and the first 2 calls to obj.relobj
-            # will return 2 different in-memory objects
-            return super(AutoSingleRelatedObjectDescriptor, self).__get__(instance, instance_type)
+        with transaction.atomic():
+            try:
+                return super(AutoSingleRelatedObjectDescriptor, self).__get__(instance, instance_type)
+            except self.related.model.DoesNotExist:
+                obj = self.related.model(**{self.related.field.name: instance})
+                obj.save()
+                # Don't return obj directly, otherwise it won't be added
+                # to Django's cache, and the first 2 calls to obj.relobj
+                # will return 2 different in-memory objects
+                return super(AutoSingleRelatedObjectDescriptor, self).__get__(instance, instance_type)
 
 
 class AutoOneToOneField(OneToOneField):
