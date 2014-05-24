@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 setup(
     name="django-annoying",
-    version="0.7.9",
+    version="0.8.0",
     packages=find_packages(),
     author="Stavros Korokithakis",
     author_email="stavros@korokithakis.net",
