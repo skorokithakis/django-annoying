@@ -1,4 +1,3 @@
-import importlib
 from django.shortcuts import render_to_response
 from django import forms
 from django import VERSION as DJANGO_VERSION
