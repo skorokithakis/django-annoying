@@ -90,12 +90,12 @@ class JSONField(models.TextField):
             pass
         return value
 
-    def get_db_prep_save(self, value, *args, **kwargs):
+    def get_prep_value(self, value):
         if value == "":
             return None
         if isinstance(value, dict) or isinstance(value, list):
             value = json.dumps(value, cls=DjangoJSONEncoder)
-        return super(JSONField, self).get_db_prep_save(value, *args, **kwargs)
+        return super(JSONField, self).get_prep_value(value)
 
     def value_from_object(self, obj):
         value = super(JSONField, self).value_from_object(obj)
