@@ -5,11 +5,19 @@ from django.template import RequestContext
 from django.db.models import signals as signalmodule
 from django.http import HttpResponse
 from django.conf import settings
+from django.core.serializers.json import DjangoJSONEncoder
+
 # Try to be compatible with Django 1.5+.
 try:
     import json
 except ImportError:
     from django.utils import simplejson as json
+
+# Basestring no longer exists in Python 3
+try:
+    basestring
+except:
+    basestring = str
 
 import datetime
 import os
@@ -156,15 +164,9 @@ class Signals(object):
 signals = Signals()
 
 
-def date_time_handler(obj):
-    if isinstance(obj, datetime.datetime):
-        return obj.isoformat()
-    else:
-        raise TypeError("%r is not JSON serializable" % obj)
-
 FORMAT_TYPES = {
-    'application/json': lambda response: json.dumps(response, default=date_time_handler),
-    'text/json':        lambda response: json.dumps(response, default=date_time_handler),
+    'application/json': lambda response: json.dumps(response, cls=DjangoJSONEncoder),
+    'text/json':        lambda response: json.dumps(response, cls=DjangoJSONEncoder),
 }
 
 try:

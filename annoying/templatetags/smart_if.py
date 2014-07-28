@@ -2,6 +2,12 @@ from django import template
 
 __author__ = "SmileyChris"
 
+# Basestring no longer exists in Python 3
+try:
+    basestring
+except:
+    basestring = str
+
 #==============================================================================
 # Calculation objects
 #==============================================================================
