@@ -16,6 +16,12 @@ try:
 except ImportError:
     from django.utils import simplejson as json
 
+# Basestring no longer exists in Python 3
+try:
+    basestring
+except:
+    basestring = str
+
 
 class AutoSingleRelatedObjectDescriptor(SingleRelatedObjectDescriptor):
     def __get__(self, instance, instance_type=None):
