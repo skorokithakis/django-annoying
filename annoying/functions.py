@@ -19,7 +19,6 @@ def get_object_or_None(klass, *args, **kwargs):
         return None
 
 
-
 def get_config(key, default=None):
     """
     Get settings from django.conf if exists,
@@ -30,3 +29,15 @@ def get_config(key, default=None):
     ADMIN_EMAIL = get_config('ADMIN_EMAIL', 'default@email.com')
     """
     return getattr(settings, key, default)
+
+
+def get_object_or_this(model, this=None, *args, **kwargs):
+    """
+    Uses get() to return an object or the value of
+    <this> argument if object does not exist.
+
+    If the <this> argument if not provide None will returned.
+    <model> can be either a QuerySet instance or a class.
+    """
+
+    return get_object_or_None(model, *args, **kwargs) or this
