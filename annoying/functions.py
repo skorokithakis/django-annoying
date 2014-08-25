@@ -33,10 +33,10 @@ def get_config(key, default=None):
 
 def get_object_or_this(model, this=None, *args, **kwargs):
     """
-    Uses get() to return an object or the value of
-    <this> argument if object does not exist.
+    Uses get() to return an object or the value of <this> argument
+    if object does not exist.
 
-    If the <this> argument if not provide None will returned.
+    If the <this> argument if not provided None would be returned.
     <model> can be either a QuerySet instance or a class.
     """
 
