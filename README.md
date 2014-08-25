@@ -177,7 +177,7 @@ in debugger.
 
 Used on [python](http://pyplanet.org) community portal.
 
-### get\_object\_or\this function
+### get\_object\_or\_this function
 
     from annoying.functions import get_object_or_this
 
