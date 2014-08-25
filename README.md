@@ -176,3 +176,21 @@ to debugged middleware and will save you from constantly typing "continue"
 in debugger.
 
 Used on [python](http://pyplanet.org) community portal.
+
+### get\_object\_or\_this function
+
+    from annoying.functions import get_object_or_this
+
+    def get_site(site_id):
+        base_site = Site.objects.get(id=1)
+
+        # Get site with site_id or return base site.
+        site = get_object_or_this(Site, base_site, id=site_id)
+
+        ...
+        ...
+        ...
+
+        return site
+
+
