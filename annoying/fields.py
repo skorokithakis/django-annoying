@@ -92,6 +92,8 @@ class JSONField(models.TextField):
         try:
             if isinstance(value, basestring):
                 return json.loads(value)
+            elif isinstance(value, bytes):
+                return json.loads(value.decode('utf8'))
         except ValueError:
             pass
         return value
