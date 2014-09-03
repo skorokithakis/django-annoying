@@ -35,4 +35,4 @@ if __name__ == '__main__':
     models.loading.cache.app_store[type(this + '.models', (), {'__file__':__file__})] = this
 
     from django.core import management
-    management.execute_from_command_line(["test.py", "test", "annoying"])
+    management.execute_from_command_line(["test.py", "test", "annoying.tests"])

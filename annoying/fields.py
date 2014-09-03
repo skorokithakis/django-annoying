@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import OneToOneField
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models.fields.related import SingleRelatedObjectDescriptor
+from django.utils import six
 
 # South support.
 try:
@@ -67,7 +68,7 @@ if SOUTH:
     ["^annoying\.fields\.AutoOneToOneField"])
 
 
-class JSONField(models.TextField):
+class JSONField(six.with_metaclass(models.SubfieldBase, models.TextField)):
     """
     JSONField is a generic textfield that neatly serializes/unserializes
     JSON objects seamlessly.
@@ -83,8 +84,6 @@ class JSONField(models.TextField):
         page.save()
     """
 
-    __metaclass__ = models.SubfieldBase
-
     def to_python(self, value):
         if value == "":
             return None
@@ -92,6 +91,8 @@ class JSONField(models.TextField):
         try:
             if isinstance(value, basestring):
                 return json.loads(value)
+            elif isinstance(value, bytes):
+                return json.loads(value.decode('utf8'))
         except ValueError:
             pass
         return value

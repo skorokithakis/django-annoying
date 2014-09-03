@@ -16,22 +16,22 @@ class AJAXRequestTestCase(TestCase):
 
     def test_defaults(self):
         response = self.client.get('/ajax-request/')
-        self.assertEquals(json.loads(response.content), self.RESPONSE_JSON)
+        self.assertEqual(json.loads(response.content.decode('utf8')), self.RESPONSE_JSON)
         self.assertTrue('application/json' in response['content-type'])
 
     def test_valid_header(self):
         response = self.client.get('/ajax-request/', HTTP_ACCEPT='text/json')
-        self.assertEquals(json.loads(response.content), self.RESPONSE_JSON)
+        self.assertEqual(json.loads(response.content.decode('utf8')), self.RESPONSE_JSON)
         self.assertTrue('text/json' in response['content-type'])
 
     def test_invalid_header(self):
         response = self.client.get('/ajax-request/', HTTP_ACCEPT='foo/bar')
-        self.assertEquals(json.loads(response.content), self.RESPONSE_JSON)
+        self.assertEqual(json.loads(response.content.decode('utf8')), self.RESPONSE_JSON)
         self.assertTrue('application/json' in response['content-type'])
 
     def test_httpresponse_check(self):
         response = self.client.get('/ajax-request-httpresponse/')
-        self.assertEquals(response.content, "Data")
+        self.assertEqual(response.content, b"Data")
         self.assertTrue('text/html' in response['content-type'])
 
 
