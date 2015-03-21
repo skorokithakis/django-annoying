@@ -4,9 +4,9 @@ __author__ = "SmileyChris"
 
 # Basestring no longer exists in Python 3
 try:
-    basestring
+    str
 except:
-    basestring = str
+    str = str
 
 #==============================================================================
 # Calculation objects
@@ -140,7 +140,7 @@ class IfParser(object):
         var = self.get_var()
         if not self.at_end():
             op_token = self.get_token(lookahead=True)[0]
-            if isinstance(op_token, basestring) and (op_token not in
+            if isinstance(op_token, str) and (op_token not in
                                                      BOOL_OPERATORS):
                 op, negate = self.get_operator()
                 return op(var, self.get_var(), negate=negate)
@@ -149,7 +149,7 @@ class IfParser(object):
     def get_var(self):
         token, negate = self.get_token('Reached end of statement, still '
                                        'expecting a variable.')
-        if isinstance(token, basestring) and token in OPERATORS:
+        if isinstance(token, str) and token in OPERATORS:
             raise self.error_class('Expected variable, got operator (%s).' %
                                    token)
         var = self.create_var(token)
@@ -160,7 +160,7 @@ class IfParser(object):
     def get_operator(self):
         token, negate = self.get_token('Reached end of statement, still '
                                        'expecting an operator.')
-        if not isinstance(token, basestring) or token not in OPERATORS:
+        if not isinstance(token, str) or token not in OPERATORS:
             raise self.error_class('%s is not a valid operator.' % token)
         if self.at_end():
             raise self.error_class('No variable provided after "%s".' % token)

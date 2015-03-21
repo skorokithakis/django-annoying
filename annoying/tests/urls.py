@@ -1,5 +1,5 @@
 """URLs for django-annoying's tests"""
-from __future__ import absolute_import
+
 
 from django.conf.urls import patterns
 from . import views

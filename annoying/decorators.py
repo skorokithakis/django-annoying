@@ -15,9 +15,9 @@ except ImportError:
 
 # Basestring no longer exists in Python 3
 try:
-    basestring
+    str
 except:
-    basestring = str
+    str = str
 
 import datetime
 import os
@@ -95,7 +95,7 @@ def render_to(template=None, content_type=None, mimetype=None):
             tmpl = output.pop('TEMPLATE', template)
             if tmpl is None:
                 template_dir = os.path.join(*function.__module__.split('.')[:-1])
-                tmpl = os.path.join(template_dir, function.func_name + ".html")
+                tmpl = os.path.join(template_dir, function.__name__ + ".html")
             # Explicit version check to avoid swallowing other exceptions
             if DJANGO_VERSION[0] >= 1 and DJANGO_VERSION[1] >= 5:
                 return render_to_response(tmpl, output, \
@@ -139,7 +139,7 @@ class Signals(object):
         self._signals = {}
 
         # register all Django's default signals
-        for k, v in signalmodule.__dict__.items():
+        for k, v in list(signalmodule.__dict__.items()):
             # that's hardcode, but IMHO it's better than isinstance
             if not k.startswith('__') and k != 'Signal':
                 self.register_signal(v, k)
@@ -198,7 +198,7 @@ def ajax_request(func):
     @wraps(func)
     def wrapper(request, *args, **kwargs):
         for accepted_type in request.META.get('HTTP_ACCEPT', '').split(','):
-            if accepted_type in FORMAT_TYPES.keys():
+            if accepted_type in list(FORMAT_TYPES.keys()):
                 format_type = accepted_type
                 break
         else:
@@ -209,7 +209,7 @@ def ajax_request(func):
                 format_type_handler = settings.FORMAT_TYPES[format_type]
                 if hasattr(format_type_handler, '__call__'):
                     data = format_type_handler(response)
-                elif isinstance(format_type_handler, basestring):
+                elif isinstance(format_type_handler, str):
                     mod_name, func_name = format_type_handler.rsplit('.', 1)
                     module = __import__(mod_name, fromlist=[func_name])
                     function = getattr(module, func_name)
@@ -237,7 +237,7 @@ def autostrip(cls):
 
     Author: nail.xx
     """
-    fields = [(key, value) for key, value in cls.base_fields.iteritems() if isinstance(value, forms.CharField)]
+    fields = [(key, value) for key, value in list(cls.base_fields.items()) if isinstance(value, forms.CharField)]
     for field_name, field_object in fields:
         def get_clean_func(original_clean):
             return lambda value: original_clean(value and value.strip())

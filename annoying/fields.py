@@ -19,9 +19,9 @@ except ImportError:
 
 # Basestring no longer exists in Python 3
 try:
-    basestring
+    str
 except:
-    basestring = str
+    str = str
 
 
 class AutoSingleRelatedObjectDescriptor(SingleRelatedObjectDescriptor):
@@ -89,7 +89,7 @@ class JSONField(six.with_metaclass(models.SubfieldBase, models.TextField)):
             return None
 
         try:
-            if isinstance(value, basestring):
+            if isinstance(value, str):
                 return json.loads(value)
             elif isinstance(value, bytes):
                 return json.loads(value.decode('utf8'))

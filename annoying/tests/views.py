@@ -1,5 +1,5 @@
 """Views for django-annoying's tests"""
-from __future__ import absolute_import
+
 
 from django.http import HttpResponse
 
