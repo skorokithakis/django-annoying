@@ -19,9 +19,9 @@ except ImportError:
 
 # Basestring no longer exists in Python 3
 try:
-    str
+    basestring
 except:
-    str = str
+    basestring = str
 
 
 class AutoSingleRelatedObjectDescriptor(SingleRelatedObjectDescriptor):
