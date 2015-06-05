@@ -1,7 +1,7 @@
 import django
 from django import template
 
-from .smart_if import smart_if
+from smart_if import smart_if
 
 
 register = template.Library()

@@ -97,7 +97,7 @@ class JSONField(six.with_metaclass(models.SubfieldBase, models.TextField)):
             return None
 
         try:
-            if isinstance(value, str):
+            if isinstance(value, basestring):
                 return json.loads(value)
             elif isinstance(value, bytes):
                 return json.loads(value.decode('utf8'))
