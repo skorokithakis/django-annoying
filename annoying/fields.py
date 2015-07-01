@@ -23,11 +23,16 @@ try:
 except:
     basestring = str
 
+try:
+    from django.db.transaction import atomic
+except ImportError:
+    from django.db.transaction import commit_on_success as atomic
 
 class AutoSingleRelatedObjectDescriptor(SingleRelatedObjectDescriptor):
     """
     The descriptor that handles the object creation for an AutoOneToOneField.
     """
+    @atomic
     def __get__(self, instance, instance_type=None):
         model = getattr(self.related, 'related_model', self.related.model)
 
