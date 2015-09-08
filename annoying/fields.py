@@ -110,6 +110,16 @@ class JSONField(six.with_metaclass(models.SubfieldBase, models.TextField)):
             pass
         return value
 
+
+    def get_default(self):
+        # Override Django's `get_default()` to avoid stringification.
+        if self.has_default():
+            if callable(self.default):
+                return self.default()
+            return self.default
+        return ""
+
+
     def get_db_prep_save(self, value, *args, **kwargs):
         if value == "":
             return None
@@ -117,11 +127,13 @@ class JSONField(six.with_metaclass(models.SubfieldBase, models.TextField)):
             value = json.dumps(value, cls=DjangoJSONEncoder)
         return super(JSONField, self).get_db_prep_save(value, *args, **kwargs)
 
+
     def value_from_object(self, obj):
         value = super(JSONField, self).value_from_object(obj)
         if self.null and value is None:
             return None
         return json.dumps(value)
+
 
 if SOUTH:
     add_introspection_rules([], ["^annoying.fields.JSONField"])
