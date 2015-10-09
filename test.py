@@ -11,7 +11,8 @@ SETTINGS = dict(
     DEBUG=True,
     TEMPLATE_DEBUG=True,
     ROOT_URLCONF=this,
-    INSTALLED_APPS=('django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions', 'annoying'),
+    INSTALLED_APPS=('django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions',
+                    'annoying', 'annoying.tests'),
     TEMPLATE_DIRS=(osp.join(BASE_DIR, 'annoying', 'tests', 'templates'),),
 )
 
