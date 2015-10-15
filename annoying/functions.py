@@ -1,5 +1,6 @@
 from django.shortcuts import _get_queryset
 from django.conf import settings
+from django.db import ProgrammingError
 
 
 def get_object_or_None(klass, *args, **kwargs):
@@ -17,6 +18,10 @@ def get_object_or_None(klass, *args, **kwargs):
         return queryset.get(*args, **kwargs)
     except queryset.model.DoesNotExist:
         return None
+    except ProgrammingError as p:
+        if p.errno == 1146:  # Table doesn't exist.
+            return None
+        raise
 
 
 def get_config(key, default=None):
