@@ -40,9 +40,8 @@ class AutoSingleRelatedObjectDescriptor(SingleRelatedObjectDescriptor):
             return (super(AutoSingleRelatedObjectDescriptor, self)
                     .__get__(instance, instance_type))
         except model.DoesNotExist:
-            obj = model(**{self.related.field.name: instance})
-
-            obj.save()
+            # Using get_or_create instead() of save() or create() as it better handles race conditions
+            model.objects.get_or_create(**{self.related.field.name: instance})
 
             # Don't return obj directly, otherwise it won't be added
             # to Django's cache, and the first 2 calls to obj.relobj
