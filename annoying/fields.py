@@ -1,7 +1,10 @@
 from django.db import models
 from django.db.models import OneToOneField
 from django.core.serializers.json import DjangoJSONEncoder
-from django.db.models.fields.related import SingleRelatedObjectDescriptor
+try:
+    from django.db.models.fields.related import SingleRelatedObjectDescriptor
+except ImportError:
+    from django.db.models.fields.related_descriptors import ForwardManyToOneDescriptor as SingleRelatedObjectDescriptor
 from django.utils import six
 
 # South support.
