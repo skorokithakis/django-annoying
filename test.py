@@ -33,7 +33,5 @@ if __name__ == '__main__':
         return get_app_orig(app_label, *a, **kw)
     models.get_app = get_app
 
-    models.loading.cache.app_store[type(this + '.models', (), {'__file__':__file__})] = this
-
     from django.core import management
     management.execute_from_command_line(["test.py", "test", "annoying.tests"])
