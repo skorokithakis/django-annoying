@@ -7,13 +7,16 @@ BASE_DIR = osp.dirname(__file__)
 
 from django.conf import settings
 SETTINGS = dict(
-    DATABASES={'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': 'test.db'}},
+    DATABASES={'default': {'ENGINE': 'django.db.backends.sqlite3',
+                           'NAME': 'test.db'}},
     DEBUG=True,
     TEMPLATE_DEBUG=True,
     ROOT_URLCONF=this,
-    INSTALLED_APPS=('django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions',
-                    'annoying', 'annoying.tests'),
-    TEMPLATE_DIRS=(osp.join(BASE_DIR, 'annoying', 'tests', 'templates'),),
+    INSTALLED_APPS=(
+        'django.contrib.auth', 'django.contrib.contenttypes',
+        'django.contrib.sessions', 'annoying', 'annoying.tests'
+    ),
+    TEMPLATE_DIRS=(osp.join(BASE_DIR, 'annoying', 'tests', 'templates'), ),
 )
 
 if not settings.configured:
@@ -22,15 +25,17 @@ if not settings.configured:
 from django.db import models
 from django.conf.urls import patterns
 
-urlpatterns = patterns('',)
+urlpatterns = patterns('', )
 
 if __name__ == '__main__':
     # override get_app to work with us
     get_app_orig = models.get_app
+
     def get_app(app_label, *a, **kw):
         if app_label == this:
             return sys.modules[__name__]
         return get_app_orig(app_label, *a, **kw)
+
     models.get_app = get_app
 
     from django.core import management
