@@ -16,15 +16,20 @@ SETTINGS = dict(
         'django.contrib.auth', 'django.contrib.contenttypes',
         'django.contrib.sessions', 'annoying', 'annoying.tests'
     ),
-    TEMPLATE_DIRS=(osp.join(BASE_DIR, 'annoying', 'tests', 'templates'), ),
+    TEMPLATES = [
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'DIRS': [
+                osp.join(BASE_DIR, 'annoying', 'tests', 'templates')
+            ]
+        }
+    ]
 )
 
 if not settings.configured:
     settings.configure(**SETTINGS)
 
-from django.conf.urls import patterns
-
-urlpatterns = patterns('', )
+urlpatterns = []
 
 if __name__ == '__main__':
     # Override Apps module to work with us
