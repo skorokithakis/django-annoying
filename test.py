@@ -22,21 +22,20 @@ SETTINGS = dict(
 if not settings.configured:
     settings.configure(**SETTINGS)
 
-from django.db import models
 from django.conf.urls import patterns
 
 urlpatterns = patterns('', )
 
 if __name__ == '__main__':
-    # override get_app to work with us
-    get_app_orig = models.get_app
+    # Override Apps module to work with us
+    from django.apps.registry import Apps
+    get_containing_app_config_orig = Apps.get_containing_app_config
 
-    def get_app(app_label, *a, **kw):
-        if app_label == this:
-            return sys.modules[__name__]
-        return get_app_orig(app_label, *a, **kw)
+    def get_containing_app_config(Apps_object, *args, **kwargs):
+        Apps_object.apps_ready = True
+        return get_containing_app_config_orig(Apps_object, *args, **kwargs)
 
-    models.get_app = get_app
+    Apps.get_containing_app_config = get_containing_app_config
 
     from django.core import management
     management.execute_from_command_line(["test.py", "test", "annoying.tests"])
