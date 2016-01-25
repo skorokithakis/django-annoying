@@ -7,6 +7,7 @@ try:
 except ImportError:
     from django.utils import simplejson as json
 
+
 class AJAXRequestTestCase(TestCase):
     """Test cases for ajax_request"""
     urls = 'annoying.tests.urls'

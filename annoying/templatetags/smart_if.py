@@ -8,6 +8,7 @@ try:
 except:
     basestring = str
 
+
 #==============================================================================
 # Calculation objects
 #==============================================================================
@@ -243,4 +244,3 @@ def smart_if(parser, token):
     else:
         nodelist_false = None
     return SmartIfNode(var, nodelist_true, nodelist_false)
-

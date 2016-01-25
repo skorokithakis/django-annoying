@@ -19,7 +19,6 @@ try:
 except:
     basestring = str
 
-import datetime
 import os
 
 __all__ = ['render_to', 'signals', 'ajax_request', 'autostrip']
@@ -98,11 +97,11 @@ def render_to(template=None, content_type=None, mimetype=None):
                 tmpl = os.path.join(template_dir, function.func_name + ".html")
             # Explicit version check to avoid swallowing other exceptions
             if DJANGO_VERSION[0] >= 1 and DJANGO_VERSION[1] >= 5:
-                return render_to_response(tmpl, output, \
+                return render_to_response(tmpl, output,
                         context_instance=RequestContext(request),
                         content_type=content_type or mimetype)
             else:
-                return render_to_response(tmpl, output, \
+                return render_to_response(tmpl, output,
                         context_instance=RequestContext(request),
                         mimetype=content_type or mimetype)
         return wrapper
@@ -166,7 +165,7 @@ signals = Signals()
 
 FORMAT_TYPES = {
     'application/json': lambda response: json.dumps(response, cls=DjangoJSONEncoder),
-    'text/json':        lambda response: json.dumps(response, cls=DjangoJSONEncoder),
+    'text/json': lambda response: json.dumps(response, cls=DjangoJSONEncoder),
 }
 
 try:
@@ -176,7 +175,7 @@ except ImportError:
 else:
     FORMAT_TYPES.update({
         'application/yaml': yaml.dump,
-        'text/yaml':        yaml.dump,
+        'text/yaml': yaml.dump,
     })
 
 

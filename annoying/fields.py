@@ -31,6 +31,7 @@ try:
 except ImportError:
     from django.db.transaction import commit_on_success as atomic
 
+
 class AutoSingleRelatedObjectDescriptor(SingleRelatedObjectDescriptor):
     """
     The descriptor that handles the object creation for an AutoOneToOneField.
@@ -51,6 +52,7 @@ class AutoSingleRelatedObjectDescriptor(SingleRelatedObjectDescriptor):
             # will return 2 different in-memory objects
             return (super(AutoSingleRelatedObjectDescriptor, self)
                     .__get__(instance, instance_type))
+
 
 class AutoOneToOneField(OneToOneField):
     '''
@@ -79,8 +81,8 @@ if SOUTH:
                 "db_index": ["db_index", {"default": True}],
             },
         )
-    ],
-    ["^annoying\.fields\.AutoOneToOneField"])
+        ],
+        ["^annoying\.fields\.AutoOneToOneField"])
 
 
 class JSONField(six.with_metaclass(models.SubfieldBase, models.TextField)):
@@ -112,7 +114,6 @@ class JSONField(six.with_metaclass(models.SubfieldBase, models.TextField)):
             pass
         return value
 
-
     def get_default(self):
         # Override Django's `get_default()` to avoid stringification.
         if self.has_default():
@@ -121,14 +122,12 @@ class JSONField(six.with_metaclass(models.SubfieldBase, models.TextField)):
             return self.default
         return ""
 
-
     def get_db_prep_save(self, value, *args, **kwargs):
         if value == "":
             return None
         if isinstance(value, dict) or isinstance(value, list):
             value = json.dumps(value, cls=DjangoJSONEncoder)
         return super(JSONField, self).get_db_prep_save(value, *args, **kwargs)
-
 
     def value_from_object(self, obj):
         value = super(JSONField, self).value_from_object(obj)
