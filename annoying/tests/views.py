@@ -7,6 +7,7 @@ from ..decorators import ajax_request, render_to
 
 import datetime
 
+
 @ajax_request
 def ajax_request_view(request):
     return {
@@ -20,6 +21,7 @@ def ajax_request_view(request):
         'string': 'barry',
         'date': datetime.datetime(2013, 12, 25, 15, 16),
     }
+
 
 @ajax_request
 def ajax_request_httpresponse_view(request):
