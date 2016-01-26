@@ -26,7 +26,7 @@ setup(
         **Installation instructions:**
 
              - Copy the "annoying" directory to your Django project or put it in your PYTHONPATH.
-             - You can also run "sudo python setup.py install" or "sudo easy_install django-annoying".
+             - You can also run "python setup.py install", "easy_install django-annoying", or "pip install django-annoying".
 
 
         **Download:**
@@ -44,7 +44,6 @@ setup(
         'Intended Audience :: Developers',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
     ],

@@ -1,8 +1,15 @@
 """URLs for django-annoying's tests"""
 from __future__ import absolute_import
 
-from django.conf.urls import patterns
+from django.conf.urls import url
 from . import views
+
+
+try:
+    from django.conf.urls import patterns
+except ImportError:
+    # Hack for backwards-compatibility.
+    patterns = lambda *x: list(x[1:])
 
 urlpatterns = patterns('',
     (r'^ajax-request/$', views.ajax_request_view),
