@@ -7,16 +7,6 @@ BASE_DIR = osp.dirname(__file__)
 
 from django.conf import settings
 
-# Check Django version and adjust settings for 1.6.
-import django
-from distutils.version import StrictVersion
-old_django = False
-django_version = django.get_version()
-if StrictVersion(django_version) < StrictVersion('1.6.0'):
-    raise ValueError("Django-annoying requires Django 1.6 or later.")
-if StrictVersion(django_version) < StrictVersion('1.7.0'):
-    old_django = True
-
 SETTINGS = dict(
     DATABASES={'default': {'ENGINE': 'django.db.backends.sqlite3',
                            'NAME': 'test.db'}},
@@ -37,7 +27,13 @@ SETTINGS = dict(
     ]
 )
 
-if old_django:
+# Check Django version and adjust settings for 1.6.
+import django
+from distutils.version import LooseVersion
+django_version = django.get_version()
+if LooseVersion(django_version) < LooseVersion('1.6.0'):
+    raise ValueError("Django-annoying requires Django 1.6 or later.")
+if LooseVersion(django_version) < LooseVersion('1.7.0'):
     del SETTINGS['TEMPLATES']
     SETTINGS['TEMPLATE_DIRS'] = [
         osp.join(BASE_DIR, 'annoying', 'tests', 'templates')
@@ -46,14 +42,16 @@ if old_django:
 if not settings.configured:
     settings.configure(**SETTINGS)
 
-urlpatterns = []
-
-if old_django:
+try:
     from django.conf.urls import patterns
-    urlpatterns = patterns('', )
+except ImportError:
+    # Hack for backwards-compatibility.
+    patterns = lambda *x: list(x[1:])
+
+urlpatterns = patterns('', )
 
 if __name__ == '__main__':
-    if old_django is not True:
+    try:
         # Override Apps module to work with us
         from django.apps.registry import Apps
         get_containing_app_config_orig = Apps.get_containing_app_config
@@ -64,7 +62,7 @@ if __name__ == '__main__':
 
         Apps.get_containing_app_config = get_containing_app_config
 
-    else:
+    except ImportError:
         # override get_app to work with us for Django 1.6.
         from django.db import models
         get_app_orig = models.get_app
