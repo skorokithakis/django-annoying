@@ -31,9 +31,9 @@ SETTINGS = dict(
 import django
 from distutils.version import LooseVersion
 django_version = django.get_version()
-if LooseVersion(django_version) < LooseVersion('1.6.0'):
+if LooseVersion(django_version) < LooseVersion('1.6'):
     raise ValueError("Django-annoying requires Django 1.6 or later.")
-if LooseVersion(django_version) < LooseVersion('1.7.0'):
+if LooseVersion(django_version) < LooseVersion('1.7'):
     del SETTINGS['TEMPLATES']
     SETTINGS['TEMPLATE_DIRS'] = [
         osp.join(BASE_DIR, 'annoying', 'tests', 'templates')
