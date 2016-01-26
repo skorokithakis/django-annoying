@@ -24,8 +24,8 @@ framework.
 ### Installation instructions
 
 -   Copy the `annoying` directory to your django project or put in on your PYTHONPATH.
--   You can also run `sudo python setup.py install`, `sudo easy_install django-annoying`,
-    or `sudo pip install django-annoying`.
+-   You can also run `python setup.py install`, `easy_install django-annoying`,
+    or `pip install django-annoying`.
 -   Add `"annoying"` under INSTALLED\_APPS in your `settings.py` file.
 -   Django-annoying requires Django 1.6 or later.
 
