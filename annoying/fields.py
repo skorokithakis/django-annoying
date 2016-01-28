@@ -126,8 +126,9 @@ class JSONField(six.with_metaclass(models.SubfieldBase, models.TextField)):
         if value == "":
             return None
         if isinstance(value, dict) or isinstance(value, list):
-            value = json.dumps(value, cls=DjangoJSONEncoder)
-        return super(JSONField, self).get_db_prep_save(value, *args, **kwargs)
+            return json.dumps(value, cls=DjangoJSONEncoder)
+        else:
+            return super(JSONField, self).get_db_prep_save(value, *args, **kwargs)
 
     def value_from_object(self, obj):
         value = super(JSONField, self).value_from_object(obj)
