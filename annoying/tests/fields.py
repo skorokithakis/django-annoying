@@ -21,10 +21,10 @@ class FieldsTestCase(TestCase):
             'strength': 100,
             'defence': 50,
         }
-        super_villain = models.SuperVillain.objects.create(stats=stats)
+        sv = models.SuperVillain.objects.create(stats=stats)
 
         # Refresh from DB
-        super_villain = models.SuperVillain.objects.get(pk=super_villain.pk)
+        super_villain = models.SuperVillain.objects.get(pk=sv.pk)
 
         self.assertEqual(super_villain.stats['strength'], 100)
         self.assertEqual(super_villain.stats['defence'], 50)
