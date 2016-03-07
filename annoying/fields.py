@@ -1,3 +1,5 @@
+from django import VERSION
+
 from django.db import models
 from django.db.models import OneToOneField
 from django.core.serializers.json import DjangoJSONEncoder
@@ -85,7 +87,13 @@ if SOUTH:
         ["^annoying\.fields\.AutoOneToOneField"])
 
 
-class JSONField(six.with_metaclass(models.SubfieldBase, models.TextField)):
+if VERSION >= (1, 9):
+    JSONFieldBase = models.TextField
+else:
+    JSONFieldBase = six.with_metaclass(models.SubfieldBase, models.TextField)
+
+
+class JSONField(JSONFieldBase):
     """
     JSONField is a generic textfield that neatly serializes/unserializes
     JSON objects seamlessly.
