@@ -122,6 +122,9 @@ class JSONField(JSONFieldBase):
             pass
         return value
 
+    def from_db_value(self, value, *args, **kwargs):
+        return self.to_python(value)
+
     def get_default(self):
         # Override Django's `get_default()` to avoid stringification.
         if self.has_default():
