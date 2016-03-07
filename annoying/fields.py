@@ -87,7 +87,7 @@ if SOUTH:
         ["^annoying\.fields\.AutoOneToOneField"])
 
 
-if VERSION >= (1, 9):
+if VERSION >= (1, 8):
     JSONFieldBase = models.TextField
 else:
     JSONFieldBase = six.with_metaclass(models.SubfieldBase, models.TextField)
