@@ -137,7 +137,7 @@ class JSONField(JSONFieldBase):
         if value == "":
             return None
         if isinstance(value, dict) or isinstance(value, list):
-            return json.dumps(value, cls=DjangoJSONEncoder)
+            return json.dumps(value, cls=DjangoJSONEncoder, sort_keys=True, indent=2, separators=(',', ': '))
         else:
             return super(JSONField, self).get_db_prep_save(value, *args, **kwargs)
 
@@ -145,7 +145,7 @@ class JSONField(JSONFieldBase):
         value = super(JSONField, self).value_from_object(obj)
         if self.null and value is None:
             return None
-        return json.dumps(value)
+        return json.dumps(value, sort_keys=True, indent=2, separators=(',', ': '))
 
 
 if SOUTH:
