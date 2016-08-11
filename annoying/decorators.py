@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response
+from django.shortcuts import render, render_to_response
 from django import forms
 from django import VERSION as DJANGO_VERSION
 from django.template import RequestContext
@@ -96,7 +96,10 @@ def render_to(template=None, content_type=None, mimetype=None):
                 template_dir = os.path.join(*function.__module__.split('.')[:-1])
                 tmpl = os.path.join(template_dir, function.func_name + ".html")
             # Explicit version check to avoid swallowing other exceptions
-            if DJANGO_VERSION[0] >= 1 and DJANGO_VERSION[1] >= 5:
+            if DJANGO_VERSION >= (1, 9):
+                return render(request, tmpl, output,
+                              content_type=content_type or mimetype)
+            elif DJANGO_VERSION >= (1, 5):
                 return render_to_response(tmpl, output,
                         context_instance=RequestContext(request),
                         content_type=content_type or mimetype)
