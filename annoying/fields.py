@@ -110,6 +110,9 @@ class JSONField(JSONFieldBase):
     """
 
     def to_python(self, value):
+        """
+        Convert a string from the database to a Python value.
+        """
         if value == "":
             return None
 
@@ -121,6 +124,12 @@ class JSONField(JSONFieldBase):
         except ValueError:
             pass
         return value
+
+    def get_prep_value(self, value):
+        """
+        Convert the value to a string so it can be stored in the database.
+        """
+        return self.get_db_prep_save(value)
 
     def from_db_value(self, value, *args, **kwargs):
         return self.to_python(value)
