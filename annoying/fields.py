@@ -129,7 +129,11 @@ class JSONField(JSONFieldBase):
         """
         Convert the value to a string so it can be stored in the database.
         """
-        return self.get_db_prep_save(value)
+        if value == "":
+            return None
+        if isinstance(value, dict) or isinstance(value, list):
+            return json.dumps(value, cls=DjangoJSONEncoder, sort_keys=True, indent=2, separators=(',', ': '))
+        return super(JSONField, self).get_prep_value(value)
 
     def from_db_value(self, value, *args, **kwargs):
         return self.to_python(value)
