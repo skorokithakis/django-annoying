@@ -1,3 +1,5 @@
+import json
+
 from django import VERSION
 
 from django.db import models
@@ -15,12 +17,6 @@ try:
     SOUTH = True
 except ImportError:
     SOUTH = False
-
-# Try to be compatible with Django 1.5+.
-try:
-    import json
-except ImportError:
-    from django.utils import simplejson as json
 
 # Basestring no longer exists in Python 3
 try:

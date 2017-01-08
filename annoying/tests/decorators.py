@@ -1,11 +1,8 @@
 """Tests for django-annoying's decorators"""
 
-from django.test import TestCase
+import json
 
-try:
-    import json
-except ImportError:
-    from django.utils import simplejson as json
+from django.test import TestCase
 
 
 class AJAXRequestTestCase(TestCase):

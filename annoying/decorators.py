@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render, render_to_response
 from django import forms
 from django import VERSION as DJANGO_VERSION
@@ -6,12 +8,6 @@ from django.db.models import signals as signalmodule
 from django.http import HttpResponse
 from django.conf import settings
 from django.core.serializers.json import DjangoJSONEncoder
-
-# Try to be compatible with Django 1.5+.
-try:
-    import json
-except ImportError:
-    from django.utils import simplejson as json
 
 # Basestring no longer exists in Python 3
 try:
