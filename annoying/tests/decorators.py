@@ -7,9 +7,20 @@ try:
 except ImportError:
     from django.utils import simplejson as json
 
+try:
+    from django.test import override_settings
+except ImportError:
+    # Django < 1.7
+    def override_settings(**kwargs):
+        def decorator(cls):
+            return cls
+        return decorator
 
+
+@override_settings(ROOT_URLCONF='annoying.tests.urls')
 class AJAXRequestTestCase(TestCase):
     """Test cases for ajax_request"""
+    # Django < 1.7
     urls = 'annoying.tests.urls'
 
     def setUp(self):
@@ -36,8 +47,10 @@ class AJAXRequestTestCase(TestCase):
         self.assertTrue('text/html' in response['content-type'])
 
 
+@override_settings(ROOT_URLCONF='annoying.tests.urls')
 class RenderToTestCase(TestCase):
     """Test cases for render_to"""
+    # Django < 1.7
     urls = 'annoying.tests.urls'
 
     def test_content_type_kwarg(self):
