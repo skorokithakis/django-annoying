@@ -10,4 +10,4 @@ class SuperVillain(models.Model):
 
 class SuperHero(models.Model):
     name = models.CharField(max_length="20", default="Captain Hammer")
-    mortal_enemy = AutoOneToOneField(SuperVillain, related_name='mortal_enemy')
+    mortal_enemy = AutoOneToOneField(SuperVillain, on_delete=models.CASCADE, related_name='mortal_enemy')
