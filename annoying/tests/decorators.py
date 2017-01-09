@@ -2,23 +2,12 @@
 
 import json
 
-from django.test import TestCase
-
-try:
-    from django.test import override_settings
-except ImportError:
-    # Django < 1.7
-    def override_settings(**kwargs):
-        def decorator(cls):
-            return cls
-        return decorator
+from django.test import TestCase, override_settings
 
 
 @override_settings(ROOT_URLCONF='annoying.tests.urls')
 class AJAXRequestTestCase(TestCase):
     """Test cases for ajax_request"""
-    # Django < 1.7
-    urls = 'annoying.tests.urls'
 
     def setUp(self):
         self.RESPONSE_JSON = json.loads('{"int": 1, "list": [2, 3, 4], "bool": true, "date": "2013-12-25T15:16:00", "string": "barry", "dict": {"foo": "bar", "bar": "bob"}}')
@@ -47,15 +36,9 @@ class AJAXRequestTestCase(TestCase):
 @override_settings(ROOT_URLCONF='annoying.tests.urls')
 class RenderToTestCase(TestCase):
     """Test cases for render_to"""
-    # Django < 1.7
-    urls = 'annoying.tests.urls'
 
     def test_content_type_kwarg(self):
         response = self.client.get('/render-to-content-type-kwarg/')
-        self.assertTrue('text/plain' in response['content-type'])
-
-    def test_mimetype_kwarg(self):
-        response = self.client.get('/render-to-mimetype-kwarg/')
         self.assertTrue('text/plain' in response['content-type'])
 
     def test_content_type_positional(self):

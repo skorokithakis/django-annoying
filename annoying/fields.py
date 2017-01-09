@@ -1,33 +1,19 @@
 import json
 
-from django import VERSION
-
 from django.db import models
 from django.db.models import OneToOneField
+from django.db.transaction import atomic
 from django.core.serializers.json import DjangoJSONEncoder
 try:
     from django.db.models.fields.related import SingleRelatedObjectDescriptor
 except ImportError:
     from django.db.models.fields.related_descriptors import ReverseOneToOneDescriptor as SingleRelatedObjectDescriptor
-from django.utils import six
-
-# South support.
-try:
-    from south.modelsinspector import add_introspection_rules
-    SOUTH = True
-except ImportError:
-    SOUTH = False
 
 # Basestring no longer exists in Python 3
 try:
     basestring
 except:
     basestring = str
-
-try:
-    from django.db.transaction import atomic
-except ImportError:
-    from django.db.transaction import commit_on_success as atomic
 
 
 class AutoSingleRelatedObjectDescriptor(SingleRelatedObjectDescriptor):
@@ -67,29 +53,8 @@ class AutoOneToOneField(OneToOneField):
     def contribute_to_related_class(self, cls, related):
         setattr(cls, related.get_accessor_name(), AutoSingleRelatedObjectDescriptor(related))
 
-if SOUTH:
-    add_introspection_rules([
-        (
-            (AutoOneToOneField,),
-            [],
-            {
-                "to": ["rel.to", {}],
-                "to_field": ["rel.field_name", {"default_attr": "rel.to._meta.pk.name"}],
-                "related_name": ["rel.related_name", {"default": None}],
-                "db_index": ["db_index", {"default": True}],
-            },
-        )
-        ],
-        ["^annoying\.fields\.AutoOneToOneField"])
 
-
-if VERSION >= (1, 8):
-    JSONFieldBase = models.TextField
-else:
-    JSONFieldBase = six.with_metaclass(models.SubfieldBase, models.TextField)
-
-
-class JSONField(JSONFieldBase):
+class JSONField(models.TextField):
     """
     JSONField is a generic textfield that neatly serializes/unserializes
     JSON objects seamlessly.
@@ -155,7 +120,3 @@ class JSONField(JSONFieldBase):
         if self.null and value is None:
             return None
         return json.dumps(value, sort_keys=True, indent=2, separators=(',', ': '))
-
-
-if SOUTH:
-    add_introspection_rules([], ["^annoying.fields.JSONField"])
