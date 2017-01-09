@@ -1,3 +1,4 @@
+from functools import wraps
 import json
 
 from django.shortcuts import render, render_to_response
@@ -18,20 +19,6 @@ except:
 import os
 
 __all__ = ['render_to', 'signals', 'ajax_request', 'autostrip']
-
-
-try:
-    from functools import wraps
-except ImportError:
-    def wraps(wrapped, assigned=('__module__', '__name__', '__doc__'),
-              updated=('__dict__',)):
-        def inner(wrapper):
-            for attr in assigned:
-                setattr(wrapper, attr, getattr(wrapped, attr))
-            for attr in updated:
-                getattr(wrapper, attr).update(getattr(wrapped, attr, {}))
-            return wrapper
-        return inner
 
 
 def render_to(template=None, content_type=None, mimetype=None):
