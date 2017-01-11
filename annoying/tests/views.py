@@ -33,11 +33,6 @@ def render_to_content_type_kwarg(request):
     return {}
 
 
-@render_to('test.txt', mimetype='text/plain')
-def render_to_mimetype_kwarg(request):
-    return {}
-
-
 @render_to('test.txt', 'text/plain')
 def render_to_content_type_positional(request):
     return {}

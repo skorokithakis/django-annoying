@@ -21,7 +21,7 @@ import os
 __all__ = ['render_to', 'signals', 'ajax_request', 'autostrip']
 
 
-def render_to(template=None, content_type=None, mimetype=None):
+def render_to(template=None, content_type=None):
     """
     Decorator for Django views that sends returned dict to render_to_response
     function.
@@ -33,7 +33,6 @@ def render_to(template=None, content_type=None, mimetype=None):
     Parameters:
      - template: template name to use
      - content_type: content type to send in response headers
-     - mimetype: content type to send in response headers (deprecated)
 
     Examples:
     # 1. Template name in decorator parameters
@@ -81,15 +80,11 @@ def render_to(template=None, content_type=None, mimetype=None):
             # Explicit version check to avoid swallowing other exceptions
             if DJANGO_VERSION >= (1, 9):
                 return render(request, tmpl, output,
-                              content_type=content_type or mimetype)
-            elif DJANGO_VERSION >= (1, 5):
-                return render_to_response(tmpl, output,
-                        context_instance=RequestContext(request),
-                        content_type=content_type or mimetype)
+                              content_type=content_type)
             else:
                 return render_to_response(tmpl, output,
                         context_instance=RequestContext(request),
-                        mimetype=content_type or mimetype)
+                        content_type=content_type)
         return wrapper
     return renderer
 

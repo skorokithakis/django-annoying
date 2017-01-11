@@ -27,7 +27,7 @@ framework.
 -   You can also run `python setup.py install`, `easy_install django-annoying`,
     or `pip install django-annoying`.
 -   Add `"annoying"` under INSTALLED\_APPS in your `settings.py` file.
--   Django-annoying requires Django 1.6 or later.
+-   Django-annoying requires Django 1.8 or later.
 
 Examples
 --------
@@ -194,5 +194,3 @@ Used on [python](http://pyplanet.org) community portal.
         ...
 
         return site
-
-
