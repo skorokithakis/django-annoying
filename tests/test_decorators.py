@@ -5,7 +5,6 @@ import json
 from django.test import TestCase, override_settings
 
 
-@override_settings(ROOT_URLCONF='annoying.tests.urls')
 class AJAXRequestTestCase(TestCase):
     """Test cases for ajax_request"""
 
@@ -33,7 +32,6 @@ class AJAXRequestTestCase(TestCase):
         self.assertTrue('text/html' in response['content-type'])
 
 
-@override_settings(ROOT_URLCONF='annoying.tests.urls')
 class RenderToTestCase(TestCase):
     """Test cases for render_to"""
 

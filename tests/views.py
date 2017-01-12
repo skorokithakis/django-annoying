@@ -3,7 +3,7 @@ from __future__ import absolute_import
 
 from django.http import HttpResponse
 
-from ..decorators import ajax_request, render_to
+from annoying.decorators import ajax_request, render_to
 
 import datetime
 

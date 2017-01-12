@@ -24,4 +24,5 @@ matrix:
       env: DJANGO=1.9
 install:
   - pip install -q Django==$DJANGO
-script: python test.py
+  - pip install -e .
+script: ./runtests.sh

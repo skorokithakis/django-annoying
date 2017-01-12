@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 setup(
     name="django-annoying",
     version=__version__,
-    packages=find_packages(),
+    packages=['annoying'],
     author="Stavros Korokithakis",
     author_email="stavros@korokithakis.net",
     description="This is a django application that tries to eliminate annoying things in the Django framework.",
