@@ -1,5 +1,6 @@
 from functools import wraps
 import json
+import os
 
 from django.shortcuts import render, render_to_response
 from django import forms
@@ -9,14 +10,8 @@ from django.db.models import signals as signalmodule
 from django.http import HttpResponse
 from django.conf import settings
 from django.core.serializers.json import DjangoJSONEncoder
+from django.utils import six
 
-# Basestring no longer exists in Python 3
-try:
-    basestring
-except:
-    basestring = str
-
-import os
 
 __all__ = ['render_to', 'signals', 'ajax_request', 'autostrip']
 
@@ -189,7 +184,7 @@ def ajax_request(func):
                 format_type_handler = settings.FORMAT_TYPES[format_type]
                 if hasattr(format_type_handler, '__call__'):
                     data = format_type_handler(response)
-                elif isinstance(format_type_handler, basestring):
+                elif isinstance(format_type_handler, six.string_types):
                     mod_name, func_name = format_type_handler.rsplit('.', 1)
                     module = __import__(mod_name, fromlist=[func_name])
                     function = getattr(module, func_name)
