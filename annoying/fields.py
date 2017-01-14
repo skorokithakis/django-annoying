@@ -8,12 +8,7 @@ try:
     from django.db.models.fields.related import SingleRelatedObjectDescriptor
 except ImportError:
     from django.db.models.fields.related_descriptors import ReverseOneToOneDescriptor as SingleRelatedObjectDescriptor
-
-# Basestring no longer exists in Python 3
-try:
-    basestring
-except:
-    basestring = str
+from django.utils import six
 
 
 class AutoSingleRelatedObjectDescriptor(SingleRelatedObjectDescriptor):
@@ -78,7 +73,7 @@ class JSONField(models.TextField):
             return None
 
         try:
-            if isinstance(value, basestring):
+            if isinstance(value, six.string_types):
                 return json.loads(value)
             elif isinstance(value, bytes):
                 return json.loads(value.decode('utf8'))
