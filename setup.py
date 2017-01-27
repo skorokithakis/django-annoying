@@ -39,7 +39,7 @@ setup(
     keywords="django",
     url="https://github.com/skorokithakis/django-annoying",
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Framework :: Django',
         'Framework :: Django :: 1.8',
         'Framework :: Django :: 1.9',
