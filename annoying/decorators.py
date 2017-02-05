@@ -136,6 +136,7 @@ class Signals(object):
     def register_signal(self, signal, name):
         self._signals[name] = signal
 
+
 signals = Signals()
 
 
