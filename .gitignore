@@ -1,2 +1,5 @@
 *.pyc
 /.idea/
+/build/
+/dist/
+/django_annoying.egg-info/
