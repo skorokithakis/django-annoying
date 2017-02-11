@@ -2,6 +2,7 @@ import json
 
 from django.db import models
 from django.db.models import OneToOneField
+from django.db.models.fields import NOT_PROVIDED
 from django.db.transaction import atomic
 from django.core.serializers.json import DjangoJSONEncoder
 try:
@@ -55,6 +56,11 @@ class JSONField(models.TextField):
     JSON objects seamlessly.
     Django snippet #1478
 
+    Custom serializer/deserializer functions can be used to customize field's behavior.
+    Defaults:
+     - serializer: json.dumps(value, cls=DjangoJSONEncoder, sort_keys=True, indent=2, separators=(',', ': '))
+     - deserializer: json.loads(value)
+
     example:
         class Page(models.Model):
             data = JSONField(blank=True, null=True)
@@ -65,6 +71,21 @@ class JSONField(models.TextField):
         page.save()
     """
 
+    def __init__(self, *args, **kwargs):
+        def dumps(value):
+            return json.dumps(value, cls=DjangoJSONEncoder, sort_keys=True, indent=2, separators=(',', ': '))
+
+        self.serializer = kwargs.pop('serializer', dumps)
+        self.deserializer = kwargs.pop('deserializer', json.loads)
+
+        super(JSONField, self).__init__(*args, **kwargs)
+
+    def deconstruct(self):
+        name, path, args, kwargs = super(JSONField, self).deconstruct()
+        kwargs['serializer'] = self.serializer
+        kwargs['deserializer'] = self.deserializer
+        return name, path, args, kwargs
+
     def to_python(self, value):
         """
         Convert a string from the database to a Python value.
@@ -74,9 +95,9 @@ class JSONField(models.TextField):
 
         try:
             if isinstance(value, six.string_types):
-                return json.loads(value)
+                return self.deserializer(value)
             elif isinstance(value, bytes):
-                return json.loads(value.decode('utf8'))
+                return self.deserializer(value.decode('utf8'))
         except ValueError:
             pass
         return value
@@ -88,7 +109,7 @@ class JSONField(models.TextField):
         if value == "":
             return None
         if isinstance(value, dict) or isinstance(value, list):
-            return json.dumps(value, cls=DjangoJSONEncoder, sort_keys=True, indent=2, separators=(',', ': '))
+            return self.serializer(value)
         return super(JSONField, self).get_prep_value(value)
 
     def from_db_value(self, value, *args, **kwargs):
@@ -106,7 +127,7 @@ class JSONField(models.TextField):
         if value == "":
             return None
         if isinstance(value, dict) or isinstance(value, list):
-            return json.dumps(value, cls=DjangoJSONEncoder, sort_keys=True, indent=2, separators=(',', ': '))
+            return self.serializer(value)
         else:
             return super(JSONField, self).get_db_prep_save(value, *args, **kwargs)
 
@@ -114,4 +135,4 @@ class JSONField(models.TextField):
         value = super(JSONField, self).value_from_object(obj)
         if self.null and value is None:
             return None
-        return json.dumps(value, sort_keys=True, indent=2, separators=(',', ': '))
+        return self.serializer(value)

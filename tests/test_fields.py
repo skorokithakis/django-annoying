@@ -1,6 +1,7 @@
 import json
 
 from django.test import TestCase
+
 from . import models
 
 
@@ -26,8 +27,8 @@ class FieldsTestCase(TestCase):
         # Refresh from DB
         super_villain = models.SuperVillain.objects.get(pk=sv.pk)
 
-        self.assertEqual(super_villain.stats['strength'], 100)
-        self.assertEqual(super_villain.stats['defence'], 50)
+        self.assertEqual(super_villain.stats['strength'], stats['strength'])
+        self.assertEqual(super_villain.stats['defence'], stats['defence'])
         self.assertEqual(dump_dict(super_villain.stats), dump_dict(stats))
 
     def test_json_field_update(self):
@@ -42,6 +43,20 @@ class FieldsTestCase(TestCase):
         # Refresh from DB
         super_villain = models.SuperVillain.objects.get(pk=super_villain.pk)
 
-        self.assertEqual(super_villain.stats['strength'], 100)
-        self.assertEqual(super_villain.stats['defence'], 50)
+        self.assertEqual(super_villain.stats['strength'], stats['strength'])
+        self.assertEqual(super_villain.stats['defence'], stats['defence'])
         self.assertEqual(dump_dict(super_villain.stats), dump_dict(stats))
+
+    def test_json_field_custom_serializer_deserializer(self):
+        skills = {
+            'make': ['atomic_bomb', 'coffee'],
+            'understand': ['string_theory', 'women'],
+        }
+        minion = models.Minion.objects.create(skills=skills)
+
+        # Refresh from DB
+        minion = models.Minion.objects.get(pk=minion.pk)
+
+        self.assertEqual(minion.skills['make'], skills['make'])
+        self.assertEqual(minion.skills['understand'], skills['understand'])
+        self.assertEqual(dump_dict(minion.skills), dump_dict(skills))
