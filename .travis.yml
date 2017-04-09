@@ -43,5 +43,7 @@ matrix:
       env: DJANGO=1.11.0
 install:
   - pip install Django~=$DJANGO
-  - pip install -e .
+  - pip install -r requirements.txt
+before_script:
+  - flake8
 script: ./runtests.sh

@@ -78,8 +78,8 @@ def render_to(template=None, content_type=None):
                               content_type=content_type)
             else:
                 return render_to_response(tmpl, output,
-                        context_instance=RequestContext(request),
-                        content_type=content_type)
+                                          context_instance=RequestContext(request),
+                                          content_type=content_type)
         return wrapper
     return renderer
 

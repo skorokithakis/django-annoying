@@ -2,7 +2,6 @@ import json
 
 from django.db import models
 from django.db.models import OneToOneField
-from django.db.models.fields import NOT_PROVIDED
 from django.db.transaction import atomic
 from django.core.serializers.json import DjangoJSONEncoder
 try:
