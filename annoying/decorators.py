@@ -203,13 +203,10 @@ def autostrip(cls):
     strip text fields before validation
 
     example:
+    @autostrip
     class PersonForm(forms.Form):
         name = forms.CharField(min_length=2, max_length=10)
         email = forms.EmailField()
-
-    PersonForm = autostrip(PersonForm)
-
-    #or you can use @autostrip in python >= 2.6
 
     Author: nail.xx
     """

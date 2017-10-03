@@ -111,14 +111,6 @@ def my_view(request):
 ```python
 from annoying.decorators import autostrip
 
-class PersonForm(forms.Form):
-    name = forms.CharField(min_length=2, max_length=10)
-    email = forms.EmailField()
-
-PersonForm = autostrip(PersonForm)
-
-#or in python >= 2.6
-
 @autostrip
 class PersonForm(forms.Form):
     name = forms.CharField(min_length=2, max_length=10)
