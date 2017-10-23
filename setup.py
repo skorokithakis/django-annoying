@@ -38,6 +38,7 @@ setup(
     license="BSD",
     keywords="django",
     url="https://github.com/skorokithakis/django-annoying",
+    install_requires=['Django >= 1.8'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Framework :: Django',
