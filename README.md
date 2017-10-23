@@ -108,6 +108,8 @@ def my_view(request):
 
 ### autostrip decorator
 
+Note: `autostrip` is deprecated and will be removed in a future version. Django now [includes this by default](https://docs.djangoproject.com/en/stable/ref/forms/fields/#django.forms.CharField.strip).
+
 ```python
 from annoying.decorators import autostrip
 

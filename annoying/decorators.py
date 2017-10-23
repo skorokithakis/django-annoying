@@ -1,6 +1,7 @@
 from functools import wraps
 import json
 import os
+import warnings
 
 from django.shortcuts import render, render_to_response
 from django import forms
@@ -210,6 +211,14 @@ def autostrip(cls):
 
     Author: nail.xx
     """
+    warnings.warn(
+        "django-annoying autostrip is deprecated and will be removed in a "
+        "future version. Django now has native support for stripping form "
+        "fields. "
+        "https://docs.djangoproject.com/en/stable/ref/forms/fields/#django.forms.CharField.strip",
+        DeprecationWarning,
+        stacklevel=2,
+    )
     fields = [(key, value) for key, value in cls.base_fields.items() if isinstance(value, forms.CharField)]
     for field_name, field_object in fields:
         def get_clean_func(original_clean):
