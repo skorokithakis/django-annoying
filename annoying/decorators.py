@@ -1,18 +1,16 @@
-from functools import wraps
 import json
 import os
 import warnings
+from functools import wraps
 
-from django.shortcuts import render, render_to_response
-from django import forms
-from django import VERSION as DJANGO_VERSION
-from django.template import RequestContext
-from django.db.models import signals as signalmodule
-from django.http import HttpResponse
+from django import VERSION as DJANGO_VERSION, forms
 from django.conf import settings
 from django.core.serializers.json import DjangoJSONEncoder
+from django.db.models import signals as signalmodule
+from django.http import HttpResponse
+from django.shortcuts import render, render_to_response
+from django.template import RequestContext
 from django.utils import six
-
 
 __all__ = ['render_to', 'signals', 'ajax_request', 'autostrip']
 
