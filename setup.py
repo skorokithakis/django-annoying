@@ -1,6 +1,7 @@
+from setuptools import setup
+
 from annoying import __version__
 
-from setuptools import setup
 setup(
     name="django-annoying",
     version=__version__,

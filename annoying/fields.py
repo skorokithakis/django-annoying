@@ -1,14 +1,15 @@
 import json
 
+from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 from django.db.models import OneToOneField
 from django.db.transaction import atomic
-from django.core.serializers.json import DjangoJSONEncoder
+from django.utils import six
+
 try:
     from django.db.models.fields.related import SingleRelatedObjectDescriptor
 except ImportError:
     from django.db.models.fields.related_descriptors import ReverseOneToOneDescriptor as SingleRelatedObjectDescriptor
-from django.utils import six
 
 
 class AutoSingleRelatedObjectDescriptor(SingleRelatedObjectDescriptor):

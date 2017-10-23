@@ -1,8 +1,8 @@
 import re
 
 from django.conf import settings
-from django.views.static import serve
 from django.shortcuts import redirect
+from django.views.static import serve
 
 from .exceptions import Redirect
 

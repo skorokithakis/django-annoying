@@ -1,11 +1,11 @@
 """Views for django-annoying's tests"""
 from __future__ import absolute_import
 
+import datetime
+
 from django.http import HttpResponse
 
 from annoying.decorators import ajax_request, render_to
-
-import datetime
 
 
 @ajax_request

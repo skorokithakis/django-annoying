@@ -1,5 +1,5 @@
-from django.shortcuts import _get_queryset
 from django.conf import settings
+from django.shortcuts import _get_queryset
 
 
 def get_object_or_None(klass, *args, **kwargs):

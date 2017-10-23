@@ -1,9 +1,8 @@
-from json import loads, dumps
+from json import dumps, loads
 
 from django.db import models
 
-from annoying.fields import AutoOneToOneField
-from annoying.fields import JSONField
+from annoying.fields import AutoOneToOneField, JSONField
 
 
 class SuperVillain(models.Model):
