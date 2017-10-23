@@ -69,7 +69,7 @@ def foo(request, category):
 
 ### signals decorator
 
-Note: Django now [includes this by default](https://docs.djangoproject.com/en/1.5/topics/signals/#connecting-receiver-functions).
+Note: `signals` is deprecated and will be removed in a future version. Django now [includes this by default](https://docs.djangoproject.com/en/stable/topics/signals/#connecting-receiver-functions).
 
 ```python
 from annoying.decorators import signals
