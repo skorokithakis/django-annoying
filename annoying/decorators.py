@@ -124,6 +124,15 @@ class Signals(object):
         return self._connect(self._signals[name])
 
     def __call__(self, signal, **kwargs):
+        warnings.warn(
+            "django-annoying signals decorator is deprecated and will be "
+            "removed in a future version. Use Django's receiver decorator "
+            "instead. "
+            "https://docs.djangoproject.com/en/stable/topics/signals/#connecting-receiver-functions",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+
         def inner(func):
             signal.connect(func, **kwargs)
             return func
