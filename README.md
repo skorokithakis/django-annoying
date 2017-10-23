@@ -17,7 +17,7 @@ framework.
 -   [StaticServer middleware](#staticserver-middleware) - Instead of configuring urls.py, just add
     this middleware and it will serve your static files when you are in
     debug mode.
--   [get_ object_or_this_function](#get_object_or_this-function) - Similar to get_object_or_404, but returns a default object (`this`) if the object is not found. 
+-   [get_ object_or_this_function](#get_object_or_this-function) - Similar to get_object_or_404, but returns a default object (`this`) if the object is not found.
 -   HttpResponseReload - Reload and stay on same page from where the request
     was made.
 
