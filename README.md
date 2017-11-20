@@ -144,7 +144,8 @@ class MyProfile(models.Model):
 
 ### JSONField
 
-Note that if you're using Postgres you can use the built-in [django.contrib.postgres.fields.JSONField](https://docs.djangoproject.com/en/1.11/ref/contrib/postgres/fields/#jsonfield).
+Note that if you're using Postgres you can use the built-in [django.contrib.postgres.fields.JSONField](https://docs.djangoproject.com/en/1.11/ref/contrib/postgres/fields/#jsonfield), or if you're using
+MySQL/MariaDB you can use [Django-MySQL's JSONField](https://django-mysql.readthedocs.io/en/latest/model_fields/json_field.html).
 
 ```python
 from annoying.fields import JSONField
