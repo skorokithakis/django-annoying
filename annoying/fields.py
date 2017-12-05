@@ -12,17 +12,30 @@ except ImportError:
     from django.db.models.fields.related_descriptors import ReverseOneToOneDescriptor as SingleRelatedObjectDescriptor
 
 
+def dumps(value):
+    return json.dumps(
+        value,
+        cls=DjangoJSONEncoder,
+        sort_keys=True,
+        indent=2,
+        separators=(',', ': ')
+    )
+
+
 class AutoSingleRelatedObjectDescriptor(SingleRelatedObjectDescriptor):
     """
     The descriptor that handles the object creation for an AutoOneToOneField.
     """
+
     @atomic
     def __get__(self, instance, instance_type=None):
         model = getattr(self.related, 'related_model', self.related.model)
 
         try:
-            return (super(AutoSingleRelatedObjectDescriptor, self)
-                    .__get__(instance, instance_type))
+            return (
+                super(AutoSingleRelatedObjectDescriptor, self)
+                .__get__(instance, instance_type)
+            )
         except model.DoesNotExist:
             # Using get_or_create instead() of save() or create() as it better handles race conditions
             model.objects.get_or_create(**{self.related.field.name: instance})
@@ -30,8 +43,10 @@ class AutoSingleRelatedObjectDescriptor(SingleRelatedObjectDescriptor):
             # Don't return obj directly, otherwise it won't be added
             # to Django's cache, and the first 2 calls to obj.relobj
             # will return 2 different in-memory objects
-            return (super(AutoSingleRelatedObjectDescriptor, self)
-                    .__get__(instance, instance_type))
+            return (
+                super(AutoSingleRelatedObjectDescriptor, self)
+                .__get__(instance, instance_type)
+            )
 
 
 class AutoOneToOneField(OneToOneField):
@@ -46,8 +61,13 @@ class AutoOneToOneField(OneToOneField):
             home_page = models.URLField(max_length=255, blank=True)
             icq = models.IntegerField(max_length=255, null=True)
     '''
+
     def contribute_to_related_class(self, cls, related):
-        setattr(cls, related.get_accessor_name(), AutoSingleRelatedObjectDescriptor(related))
+        setattr(
+            cls,
+            related.get_accessor_name(),
+            AutoSingleRelatedObjectDescriptor(related)
+        )
 
 
 class JSONField(models.TextField):
@@ -72,9 +92,6 @@ class JSONField(models.TextField):
     """
 
     def __init__(self, *args, **kwargs):
-        def dumps(value):
-            return json.dumps(value, cls=DjangoJSONEncoder, sort_keys=True, indent=2, separators=(',', ': '))
-
         self.serializer = kwargs.pop('serializer', dumps)
         self.deserializer = kwargs.pop('deserializer', json.loads)
 
@@ -129,7 +146,8 @@ class JSONField(models.TextField):
         if isinstance(value, dict) or isinstance(value, list):
             return self.serializer(value)
         else:
-            return super(JSONField, self).get_db_prep_save(value, *args, **kwargs)
+            return super(JSONField,
+                         self).get_db_prep_save(value, *args, **kwargs)
 
     def value_from_object(self, obj):
         value = super(JSONField, self).value_from_object(obj)
