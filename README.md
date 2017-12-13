@@ -192,7 +192,6 @@ one of your middleware by responding to static requests before they get
 to debugged middleware and will save you from constantly typing "continue"
 in debugger.
 
-Used on [python](http://pyplanet.org) community portal.
 
 ### get_object_or_this function
 
