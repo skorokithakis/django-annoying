@@ -173,12 +173,12 @@ ADMIN_EMAIL = get_config('ADMIN_EMAIL', 'default@email.com')
 
 ### StaticServer middleware
 
-Add this middleware as first item in MIDDLEWARE\_CLASSES
+Add this middleware as first item in MIDDLEWARE\_CLASSES(or MIDDLEWARE)
 
 example:
 
 ```python
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE_CLASSES = (  # MIDDLEWARE if you're using the new-style middleware
     'annoying.middlewares.StaticServe',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
