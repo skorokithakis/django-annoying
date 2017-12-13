@@ -15,7 +15,6 @@ except ImportError:
     MiddlewareMixin = object
 
 
-
 class StaticServe(MiddlewareMixin):
     """
     Django middleware for serving static files instead of using urls.py
