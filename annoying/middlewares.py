@@ -2,17 +2,10 @@ import re
 
 from django.conf import settings
 from django.shortcuts import redirect
+from django.utils.deprecation import MiddlewareMixin
 from django.views.static import serve
 
 from .exceptions import Redirect
-
-try:
-    # Django >= 1.10
-    from django.utils.deprecation import MiddlewareMixin
-except ImportError:
-    # Django <= 1.9
-    # https://docs.djangoproject.com/en/1.10/topics/http/middleware/#upgrading-pre-django-1-10-style-middleware
-    MiddlewareMixin = object
 
 
 class StaticServe(MiddlewareMixin):
