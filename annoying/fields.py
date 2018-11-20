@@ -32,7 +32,7 @@ class AutoSingleRelatedObjectDescriptor(ReverseOneToOneDescriptor):
         try:
             return (
                 super(AutoSingleRelatedObjectDescriptor, self)
-                .__get__(instance, instance_type)
+                    .__get__(instance, instance_type)
             )
         except model.DoesNotExist:
             # Using get_or_create instead() of save() or create() as it better handles race conditions
@@ -43,12 +43,12 @@ class AutoSingleRelatedObjectDescriptor(ReverseOneToOneDescriptor):
             # will return 2 different in-memory objects
             return (
                 super(AutoSingleRelatedObjectDescriptor, self)
-                .__get__(instance, instance_type)
+                    .__get__(instance, instance_type)
             )
 
 
 class AutoOneToOneField(OneToOneField):
-    '''
+    """
     OneToOneField creates related object on first call if it doesnt exist yet.
     Use it instead of original OneToOne field.
 
@@ -58,7 +58,7 @@ class AutoOneToOneField(OneToOneField):
             user = AutoOneToOneField(User, primary_key=True)
             home_page = models.URLField(max_length=255, blank=True)
             icq = models.IntegerField(max_length=255, null=True)
-    '''
+    """
 
     def contribute_to_related_class(self, cls, related):
         setattr(
