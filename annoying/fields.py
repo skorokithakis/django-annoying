@@ -123,7 +123,7 @@ class JSONField(models.TextField):
         """
         if value == "":
             return None
-        if isinstance(value, dict) or isinstance(value, list):
+        if isinstance(value, (dict, list)):
             return self.serializer(value)
         return super(JSONField, self).get_prep_value(value)
 
@@ -133,15 +133,13 @@ class JSONField(models.TextField):
     def get_default(self):
         # Override Django's `get_default()` to avoid stringification.
         if self.has_default():
-            if callable(self.default):
-                return self.default()
-            return self.default
+            return self.default() if callable(self.default) else self.default
         return ""
 
     def get_db_prep_save(self, value, *args, **kwargs):
         if value == "":
             return None
-        if isinstance(value, dict) or isinstance(value, list):
+        if isinstance(value, (dict, list)):
             return self.serializer(value)
         else:
             return super(JSONField,
