@@ -1,5 +1,7 @@
 import json
+from contextlib import contextmanager
 
+from django.db import IntegrityError
 from django.test import TestCase
 
 from . import models
@@ -16,6 +18,38 @@ class FieldsTestCase(TestCase):
     def test_auto_one_to_one(self):
         super_villain = models.SuperVillain.objects.create()
         self.assertEqual(super_villain.mortal_enemy.name, "Captain Hammer")
+
+    def test_auto_one_to_one_race_condition(self):
+        """
+        Test for case:
+
+        process #1 checks if related object exists
+        process #2 checks if related object exists
+        process #1 creates related object
+        process #2 returns object created by process #1
+        """
+        @contextmanager
+        def patch_get_or_create():
+            old_get_or_create = models.SuperHero.objects.get_or_create
+
+            def get_or_create(mortal_enemy):
+                # create entity using unmanaged model to avoid caching
+                obj = models.SuperHeroUnmanaged.objects.create(mortal_enemy_id=mortal_enemy.pk)
+                return models.SuperHero.objects.get(pk=obj.pk), True
+
+            try:
+                models.SuperHero.objects.get_or_create = get_or_create
+                yield
+            finally:
+                models.SuperHero.objects.get_or_create = old_get_or_create
+
+        with patch_get_or_create():
+            try:
+                super_villain = models.SuperVillain.objects.create()
+                # check if two calls to AutoOneToOneField descriptor returns the same object
+                self.assertEqual(id(super_villain.mortal_enemy), id(super_villain.mortal_enemy))
+            except (models.SuperHero.DoesNotExist, IntegrityError):
+                self.fail("AutoOneToOneField cannot see related object created by another process")
 
     def test_json_field_create(self):
         stats = {
