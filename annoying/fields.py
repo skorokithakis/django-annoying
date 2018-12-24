@@ -1,5 +1,6 @@
 import json
 
+import django
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 from django.db.models import OneToOneField
@@ -32,19 +33,21 @@ class AutoSingleRelatedObjectDescriptor(ReverseOneToOneDescriptor):
         try:
             return (
                 super(AutoSingleRelatedObjectDescriptor, self)
-                    .__get__(instance, instance_type)
+                .__get__(instance, instance_type)
             )
         except model.DoesNotExist:
             # Using get_or_create instead() of save() or create() as it better handles race conditions
-            model.objects.get_or_create(**{self.related.field.name: instance})
+            obj, _ = model.objects.get_or_create(**{self.related.field.name: instance})
 
-            # Don't return obj directly, otherwise it won't be added
-            # to Django's cache, and the first 2 calls to obj.relobj
+            # Update Django's cache, otherwise first 2 calls to obj.relobj
             # will return 2 different in-memory objects
-            return (
-                super(AutoSingleRelatedObjectDescriptor, self)
-                    .__get__(instance, instance_type)
-            )
+            if django.VERSION >= (2, 0):
+                self.related.set_cached_value(instance, obj)
+                self.related.field.set_cached_value(obj, instance)
+            else:
+                setattr(instance, self.cache_name, obj)
+                setattr(obj, self.related.field.get_cache_name(), instance)
+            return obj
 
 
 class AutoOneToOneField(OneToOneField):

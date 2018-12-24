@@ -22,3 +22,12 @@ class Minion(models.Model):
 class SuperHero(models.Model):
     name = models.CharField(max_length=20, default="Captain Hammer")
     mortal_enemy = AutoOneToOneField(SuperVillain, on_delete=models.CASCADE, related_name='mortal_enemy')
+
+
+class SuperHeroUnmanaged(models.Model):
+    name = models.CharField(max_length=20, default="Captain Hammer")
+    mortal_enemy_id = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'tests_superhero'
