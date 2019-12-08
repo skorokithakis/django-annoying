@@ -3,26 +3,24 @@ import os
 import warnings
 from functools import wraps
 
-from django import VERSION as DJANGO_VERSION, forms
+import six
+from django import forms
 from django.conf import settings
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import signals as signalmodule
 from django.http import HttpResponse
-from django.shortcuts import render, render_to_response
-from django.template import RequestContext
-from django.utils import six
+from django.shortcuts import render
 
 __all__ = ['render_to', 'signals', 'ajax_request', 'autostrip']
 
 
 def render_to(template=None, content_type=None):
     """
-    Decorator for Django views that sends returned dict to render_to_response
+    Decorator for Django views that sends returned dict to render
     function.
 
     Template name can be decorator parameter or TEMPLATE item in returned
-    dictionary.  RequestContext always added as context instance.
-    If view doesn't return dict then decorator simply returns output.
+    dictionary.  If view doesn't return dict then decorator simply returns output.
 
     Parameters:
      - template: template name to use
@@ -39,9 +37,7 @@ def render_to(template=None, content_type=None):
     # equals to
     def foo(request):
         bar = Bar.object.all()
-        return render_to_response('template.html',
-                                  {'bar': bar},
-                                  context_instance=RequestContext(request))
+        return render(request, 'template.html', {'bar': bar})
 
 
     # 2. Template name as TEMPLATE item value in return dictionary.
@@ -56,9 +52,7 @@ def render_to(template=None, content_type=None):
     #equals to
     def foo(request, category):
         template_name = '%s.html' % category
-        return render_to_response(template_name,
-                                  {'bar': bar},
-                                  context_instance=RequestContext(request))
+        return render(request, template_name, {'bar': bar})
 
     """
     def renderer(function):
@@ -71,14 +65,8 @@ def render_to(template=None, content_type=None):
             if tmpl is None:
                 template_dir = os.path.join(*function.__module__.split('.')[:-1])
                 tmpl = os.path.join(template_dir, function.func_name + ".html")
-            # Explicit version check to avoid swallowing other exceptions
-            if DJANGO_VERSION >= (1, 9):
-                return render(request, tmpl, output,
-                              content_type=content_type)
-            else:
-                return render_to_response(tmpl, output,
-                                          context_instance=RequestContext(request),
-                                          content_type=content_type)
+            return render(request, tmpl, output,
+                          content_type=content_type)
         return wrapper
     return renderer
 

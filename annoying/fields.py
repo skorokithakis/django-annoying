@@ -1,6 +1,7 @@
 import json
 
 import django
+import six
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 from django.db.models import OneToOneField
@@ -8,7 +9,6 @@ from django.db.models.fields.related_descriptors import (
     ReverseOneToOneDescriptor,
 )
 from django.db.transaction import atomic
-from django.utils import six
 
 
 def dumps(value):

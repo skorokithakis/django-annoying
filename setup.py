@@ -39,7 +39,7 @@ setup(
     license="BSD",
     keywords="django",
     url="https://github.com/skorokithakis/django-annoying",
-    install_requires=['Django >= 1.11'],
+    install_requires=['Django >= 1.11', 'six'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Framework :: Django',

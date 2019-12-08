@@ -49,9 +49,7 @@ def foo(request):
 # equals to
 def foo(request):
     bar = Bar.object.all()
-    return render_to_response('template.html',
-                                {'bar': bar},
-                                context_instance=RequestContext(request))
+    return render(request, 'template.html', {'bar': bar})
 
 
 # 2. Template name as TEMPLATE item value in return dictionary
@@ -64,9 +62,7 @@ def foo(request, category):
 #equals to
 def foo(request, category):
     template_name = '%s.html' % category
-    return render_to_response(template_name,
-                                {'bar': bar},
-                                context_instance=RequestContext(request))
+    return render(request, template_name, {'bar': bar})
 ```
 
 ### signals decorator
