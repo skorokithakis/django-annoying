@@ -3,6 +3,7 @@ import os
 import warnings
 from functools import wraps
 
+import six
 from django import VERSION as DJANGO_VERSION, forms
 from django.conf import settings
 from django.core.serializers.json import DjangoJSONEncoder
@@ -10,7 +11,6 @@ from django.db.models import signals as signalmodule
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.template import RequestContext
-from django.utils import six
 
 __all__ = ['render_to', 'signals', 'ajax_request', 'autostrip']
 
