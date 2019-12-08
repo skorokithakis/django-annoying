@@ -16,7 +16,7 @@ class HttpResponseReload(HttpResponse):
                 return HttpResponseReload(request)
         else:
             form = CommentForm()
-        return render_to_response('some_template.html', {'form': form})
+        return render(request, 'some_template.html', {'form': form})
     """
     status_code = 302
 

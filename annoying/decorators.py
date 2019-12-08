@@ -8,7 +8,7 @@ from django.conf import settings
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import signals as signalmodule
 from django.http import HttpResponse
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render
 from django.template import RequestContext
 from django.utils import six
 
@@ -17,7 +17,7 @@ __all__ = ['render_to', 'signals', 'ajax_request', 'autostrip']
 
 def render_to(template=None, content_type=None):
     """
-    Decorator for Django views that sends returned dict to render_to_response
+    Decorator for Django views that sends returned dict to render
     function.
 
     Template name can be decorator parameter or TEMPLATE item in returned
@@ -39,9 +39,10 @@ def render_to(template=None, content_type=None):
     # equals to
     def foo(request):
         bar = Bar.object.all()
-        return render_to_response('template.html',
-                                  {'bar': bar},
-                                  context_instance=RequestContext(request))
+        return render(request,
+                      'template.html',
+                      {'bar': bar},
+                      context_instance=RequestContext(request))
 
 
     # 2. Template name as TEMPLATE item value in return dictionary.
@@ -56,9 +57,10 @@ def render_to(template=None, content_type=None):
     #equals to
     def foo(request, category):
         template_name = '%s.html' % category
-        return render_to_response(template_name,
-                                  {'bar': bar},
-                                  context_instance=RequestContext(request))
+        return render(request,
+                      template_name,
+                      {'bar': bar},
+                      context_instance=RequestContext(request))
 
     """
     def renderer(function):
@@ -76,9 +78,10 @@ def render_to(template=None, content_type=None):
                 return render(request, tmpl, output,
                               content_type=content_type)
             else:
-                return render_to_response(tmpl, output,
-                                          context_instance=RequestContext(request),
-                                          content_type=content_type)
+                return render(request,
+                              tmpl, output,
+                              context_instance=RequestContext(request),
+                              content_type=content_type)
         return wrapper
     return renderer
 
