@@ -5,9 +5,12 @@ import six
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 from django.db.models import OneToOneField
-from django.db.models.fields.related_descriptors import (
-    ReverseOneToOneDescriptor,
-)
+try:
+    from django.db.models.fields.related_descriptors import (
+        ReverseOneToOneDescriptor,
+    )
+except ImportError:
+    from django.db.models.fields.related import SingleRelatedObjectDescriptor as ReverseOneToOneDescriptor
 from django.db.transaction import atomic
 
 
