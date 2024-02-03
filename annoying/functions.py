@@ -4,10 +4,9 @@ from django.shortcuts import _get_queryset
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from django.db import models
-    from django.db.models import BaseManager, QuerySet
+    from django.db.models import BaseManager, Model, QuerySet
 
-def get_object_or_None[T: 'models.Model'](
+def get_object_or_None[T: 'Model'](
     klass: 'type[T] | QuerySet[T] | BaseManager[T]', *args, **kwargs
 ) -> T | None:
     """
