@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from django.db import models
     from django.db.models import BaseManager, QuerySet
 
-def get_object_or_None[T: models.Model](
+def get_object_or_None[T: 'models.Model'](
     klass: 'type[T] | QuerySet[T] | BaseManager[T]', *args, **kwargs
 ) -> T | None:
     """
