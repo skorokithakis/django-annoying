@@ -30,7 +30,6 @@ class AutoSingleRelatedObjectDescriptor(ReverseOneToOneDescriptor):
     The descriptor that handles the object creation for an AutoOneToOneField.
     """
 
-    @atomic
     def __get__(self, instance, instance_type=None):
         model = getattr(self.related, 'related_model', self.related.model)
 
@@ -40,8 +39,9 @@ class AutoSingleRelatedObjectDescriptor(ReverseOneToOneDescriptor):
                 .__get__(instance, instance_type)
             )
         except model.DoesNotExist:
-            # Using get_or_create instead() of save() or create() as it better handles race conditions
-            obj, _ = model.objects.get_or_create(**{self.related.field.name: instance})
+            with atomic():
+                # Using get_or_create instead() of save() or create() as it better handles race conditions
+                obj, _ = model.objects.get_or_create(**{self.related.field.name: instance})
 
             # Update Django's cache, otherwise first 2 calls to obj.relobj
             # will return 2 different in-memory objects
