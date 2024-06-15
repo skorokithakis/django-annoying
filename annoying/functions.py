@@ -1,8 +1,14 @@
 from django.conf import settings
 from django.shortcuts import _get_queryset
 
+from typing import TYPE_CHECKING
 
-def get_object_or_None(klass, *args, **kwargs):
+if TYPE_CHECKING:
+    from django.db.models import BaseManager, Model, QuerySet
+
+def get_object_or_None[T: 'Model'](
+    klass: 'type[T] | QuerySet[T] | BaseManager[T]', *args, **kwargs
+) -> T | None:
     """
     Uses get() to return an object or None if the object does not exist.
 
