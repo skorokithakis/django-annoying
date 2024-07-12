@@ -1,8 +1,18 @@
+from typing import TYPE_CHECKING, Union
+
 from django.conf import settings
 from django.shortcuts import _get_queryset
+from typing_extensions import TypeVar
+
+if TYPE_CHECKING:
+    from django.db.models import BaseManager, Model, QuerySet
+
+T = TypeVar("T", bound="Model")
 
 
-def get_object_or_None(klass, *args, **kwargs):
+def get_object_or_None(
+    klass: "Union[type[T], QuerySet[T], BaseManager[T]]", *args, **kwargs
+) -> "Union[T, None]":
     """
     Uses get() to return an object or None if the object does not exist.
 
