@@ -1,7 +1,6 @@
 import json
 
 import django
-import six
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 from django.db.models import OneToOneField
@@ -116,7 +115,7 @@ class JSONField(models.TextField):
             return None
 
         try:
-            if isinstance(value, six.string_types):
+            if isinstance(value, str):
                 return self.deserializer(value)
             elif isinstance(value, bytes):
                 return self.deserializer(value.decode('utf8'))

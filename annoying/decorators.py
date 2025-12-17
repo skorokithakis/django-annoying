@@ -3,7 +3,6 @@ import os
 import warnings
 from functools import wraps
 
-import six
 from django import forms
 from django.conf import settings
 from django.core.serializers.json import DjangoJSONEncoder
@@ -181,7 +180,7 @@ def ajax_request(func):
                 format_type_handler = settings.FORMAT_TYPES[format_type]
                 if hasattr(format_type_handler, '__call__'):
                     data = format_type_handler(response)
-                elif isinstance(format_type_handler, six.string_types):
+                elif isinstance(format_type_handler, str):
                     mod_name, func_name = format_type_handler.rsplit('.', 1)
                     module = __import__(mod_name, fromlist=[func_name])
                     function = getattr(module, func_name)
